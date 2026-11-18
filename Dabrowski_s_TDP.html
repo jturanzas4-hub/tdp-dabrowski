@@ -1,0 +1,2183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="vitals">
+  <title>Teoría de la Desintegración Positiva de Kazimierz Dąbrowski — Enfoque en Ciencias de la Salud</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&family=Figtree:wght@300..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* 1. Vitals palette & surface tokens */
+      --background: #ffffff;
+      --surface-container-low: #f1f7f8;
+      --surface-container: #e3f1f3;
+      --surface-container-high: #d5e9ec;
+
+      --on-surface: #1b2b33;
+      --on-surface-variant: #46585f;
+
+      --outline: #7b9198;
+      --outline-variant: #d5e3e5;
+
+      --primary: #0f7c8a;
+      --on-primary: #ffffff;
+      --primary-container: #e3f1f3;
+      --on-primary-container: #0a5560;
+      --secondary: #1d5e3a;
+      --tertiary: #2e7d4f;
+      --error: #b3261e;
+      --on-error: #ffffff;
+
+      --data-1: #0f7c8a;
+      --data-2: #2e7d4f;
+      --data-3: #b86e00;
+      --data-4: #5c5fb0;
+      --data-context: #b8c7ca;
+
+      --font-headline: 'Figtree', sans-serif;
+      --font-body: 'Atkinson Hyperlegible', sans-serif;
+      --font-label: 'Figtree', sans-serif;
+
+      --rounded: 0.625rem;
+      --rounded-lg: 0.875rem;
+      --rounded-full: 9999px;
+
+      --top-bar: 6px solid var(--primary);
+      --status-bar-width: 4px;
+      --card-border: 1px solid var(--outline-variant);
+      --card-lift: 0 1px 2px rgb(27 43 51 / 0.05), 0 6px 16px rgb(27 43 51 / 0.05);
+
+      /* Token-derived status washes */
+      --ok-container: color-mix(in srgb, var(--tertiary) 12%, var(--background));
+      --warn-container: color-mix(in srgb, var(--data-3) 12%, var(--background));
+      --error-container: color-mix(in srgb, var(--error) 10%, var(--background));
+      --indigo-container: color-mix(in srgb, var(--data-4) 11%, var(--background));
+
+      /* 3. Shared foundation tokens */
+      --positive: var(--tertiary);
+      --warning: var(--data-3);
+      --focus: var(--primary);
+
+      /* Type scale (Narrative) */
+      --display-size:  clamp(2.2rem, 1.35rem + 2.8vw, 3.4rem);
+      --headline-size: clamp(1.65rem, 1.2rem + 1.4vw, 2.25rem);
+      --subhead-size:  clamp(1.2rem, 1.05rem + 0.45vw, 1.45rem);
+      --body-size:     clamp(1.0625rem, 1rem + 0.2vw, 1.15rem);
+      --label-size:    clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+    header { position: static !important; }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1px;
+      transition: text-decoration-thickness var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    a:hover {
+      text-decoration-thickness: 2px;
+      color: var(--on-primary-container);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Page container with Vitals 6px teal top bar */
+    .page {
+      border-top: var(--top-bar);
+      min-height: 100vh;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Typography helpers */
+    .kicker {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      margin: 0 0 var(--space-sm) 0;
+    }
+    .kicker-teal {
+      color: var(--primary);
+    }
+
+    .title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--display-size);
+      letter-spacing: -0.02em;
+      line-height: 1.07;
+      color: var(--on-surface);
+      margin: 0;
+      max-width: 22ch;
+    }
+
+    h2.section-title {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: var(--headline-size);
+      letter-spacing: -0.015em;
+      line-height: 1.12;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    h3.sub-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-sm) 0;
+    }
+
+    h4.card-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.0625rem;
+      line-height: 1.25;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-xs) 0;
+    }
+
+    .lede {
+      font-family: var(--font-body);
+      font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3rem);
+      line-height: 1.55;
+      color: var(--on-surface-variant);
+      max-width: 62ch;
+      margin: var(--space-md) 0 0 0;
+    }
+
+    .prose {
+      max-width: 66ch;
+    }
+    .prose p {
+      margin: 0 0 var(--space-md) 0;
+    }
+    .prose p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Author clinical voice badge */
+    .author-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm) var(--space-md);
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: 1px solid var(--outline-variant);
+    }
+
+    /* Chips (Treatment #4) */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded-full);
+      background: var(--ok-container);
+      color: var(--secondary);
+      line-height: 1.3;
+      white-space: nowrap;
+    }
+    .chip[data-status="info"] {
+      background: var(--primary-container);
+      color: var(--on-primary-container);
+    }
+    .chip[data-status="alert"] {
+      background: var(--error-container);
+      color: var(--error);
+    }
+    .chip[data-status="watch"] {
+      background: var(--warn-container);
+      color: var(--on-surface);
+    }
+    .chip[data-status="neutral"] {
+      background: var(--surface-container-low);
+      color: var(--on-surface-variant);
+    }
+
+    /* Status cards (Treatment #1) */
+    .status-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+    .status-card[data-status="ok"]    { border-left-color: var(--tertiary); }
+    .status-card[data-status="alert"] { border-left-color: var(--error); }
+    .status-card[data-status="watch"] { border-left-color: var(--data-3); }
+    .status-card[data-status="indigo"] { border-left-color: var(--data-4); }
+
+    .callout {
+      background: var(--primary-container);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      color: var(--on-primary-container);
+    }
+    .callout h4, .callout p {
+      color: var(--on-primary-container);
+    }
+
+    /* Bands */
+    .wash-band {
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-xl);
+    }
+
+    /* Key figure cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-lg);
+    }
+    .kpi-label {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      margin: 0 0 var(--space-xs) 0;
+    }
+    .kpi-value {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-sm) 0;
+    }
+    .kpi-caption {
+      font-size: 0.92rem;
+      color: var(--on-surface-variant);
+      margin: 0;
+      line-height: 1.4;
+    }
+
+    /* Jump Navigation */
+    .toc-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-top: var(--space-lg);
+      padding: var(--space-md);
+      background: var(--surface-container-low);
+      border-radius: var(--rounded-lg);
+      border: var(--card-border);
+    }
+    .toc-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded);
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--on-surface);
+      text-decoration: none;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .toc-link:hover {
+      background: var(--surface-container);
+      border-color: var(--primary);
+      color: var(--on-primary-container);
+    }
+
+    /* Section wrapper */
+    .section-block {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--outline-variant);
+    }
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    /* Grids */
+    .two-col-asymmetric {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .two-col-equal {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* Buttons & Interactive Pills */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-lg);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-primary:hover {
+      background: var(--on-primary-container);
+    }
+    .btn-secondary {
+      background: var(--background);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    .btn-secondary:hover {
+      background: var(--surface-container-low);
+    }
+
+    .seg-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+    }
+    .seg-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-md);
+      border-radius: var(--rounded);
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--on-surface-variant);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .seg-btn:hover {
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+    }
+    .seg-btn[aria-pressed="true"],
+    .seg-btn.is-active {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+    }
+    table.clinical-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    table.clinical-table thead th {
+      background: var(--surface-container-low);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+    }
+    table.clinical-table tbody td {
+      padding: var(--space-md);
+      border-bottom: 1px solid var(--outline-variant);
+      vertical-align: top;
+      color: var(--on-surface);
+    }
+    table.clinical-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .num-col {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    /* Inputs & Sliders */
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .control-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--on-surface);
+    }
+    .control-value {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    input[type="range"] {
+      width: 100%;
+      min-height: 44px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .text-input, .select-input {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      border: 1px solid var(--outline);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .select-input {
+      padding-right: var(--space-xl);
+    }
+    .text-input:focus, .select-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+      outline: none;
+    }
+
+    /* Meter / Range Band */
+    .meter-track {
+      position: relative;
+      height: 14px;
+      border-radius: var(--rounded-full);
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      overflow: hidden;
+      margin: var(--space-sm) 0;
+    }
+    .meter-range-band {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 58%;
+      right: 12%;
+      background: color-mix(in srgb, var(--tertiary) 20%, transparent);
+      border-left: 1px dashed var(--tertiary);
+      border-right: 1px dashed var(--tertiary);
+    }
+    .meter-fill {
+      position: relative;
+      height: 100%;
+      border-radius: var(--rounded-full);
+      background: var(--primary);
+      transition: width var(--dur-short) var(--ease-out), background-color var(--dur-short) var(--ease-out);
+    }
+
+    /* Level Stepper Architecture */
+    .levels-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .level-step-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .level-step-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-md);
+      width: 100%;
+      min-height: 54px;
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-left: var(--status-bar-width) solid var(--outline);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .level-step-btn:hover {
+      background: var(--surface-container-low);
+    }
+    .level-step-btn[aria-selected="true"] {
+      background: var(--surface-container);
+      border-color: var(--primary);
+      border-left-color: var(--primary);
+    }
+    .level-step-btn[data-tier="V"][aria-selected="true"],
+    .level-step-btn[data-tier="IV"][aria-selected="true"] {
+      border-left-color: var(--tertiary);
+    }
+    .level-step-btn[data-tier="II"][aria-selected="true"] {
+      border-left-color: var(--error);
+    }
+    .level-step-btn[data-tier="III"][aria-selected="true"] {
+      border-left-color: var(--data-3);
+    }
+
+    .level-code {
+      font-family: var(--font-label);
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: var(--on-primary-container);
+      min-width: 4.5rem;
+    }
+    .level-name {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--on-surface);
+      flex: 1;
+    }
+
+    /* Chart card */
+    .chart-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .chart-box {
+      position: relative;
+      min-height: 350px;
+      width: 100%;
+    }
+    .chart-caption {
+      font-size: 0.88rem;
+      color: var(--on-surface-variant);
+      margin-top: var(--space-sm);
+    }
+
+    /* Glossary layout */
+    .glossary-controls {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 260px);
+      gap: var(--space-md);
+      align-items: end;
+    }
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .glossary-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .glossary-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    .glossary-orig {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--on-surface-variant);
+    }
+
+    /* Clinical Cases & Reflection Qs */
+    .case-details {
+      background: var(--background);
+      border: var(--card-border);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .question-card {
+      background: var(--background);
+      border: var(--card-border);
+      border-left: var(--status-bar-width) solid var(--primary);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    .q-options {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .q-option-btn {
+      text-align: left;
+      padding: var(--space-md);
+      min-height: 48px;
+      border-radius: var(--rounded);
+      border: 1px solid var(--outline-variant);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.98rem;
+      line-height: 1.45;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .q-option-btn:hover {
+      background: var(--surface-container);
+      border-color: var(--primary);
+    }
+    .q-option-btn[aria-pressed="true"] {
+      background: var(--surface-container);
+      border-color: var(--primary);
+      box-shadow: inset 3px 0 0 var(--primary);
+      font-weight: 700;
+    }
+    .q-analysis-panel {
+      display: none;
+      margin-top: var(--space-xs);
+      padding: var(--space-md) var(--space-lg);
+      border-radius: var(--rounded-lg);
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline-variant);
+      border-left: var(--status-bar-width) solid var(--tertiary);
+    }
+    .q-analysis-panel.is-visible {
+      display: block;
+    }
+
+    /* Footer */
+    .sources-footer {
+      border-top: 1px solid var(--outline-variant);
+      padding-top: var(--space-xl);
+      color: var(--on-surface-variant);
+      font-size: 0.92rem;
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 860px) {
+      .two-col-asymmetric,
+      .two-col-equal,
+      .levels-grid,
+      .glossary-controls {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-lg) var(--space-md) var(--space-2xl);
+        gap: var(--space-xl);
+      }
+      .wash-band {
+        padding: var(--space-lg) var(--space-md);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration:  0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior:     auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="page-grid">
+
+      <!-- =========================================================
+           CABECERA Y TESIS CLÍNICA CENTRAL
+           ========================================================= -->
+      <header>
+        <p class="kicker kicker-teal">Monografía Clínica · Ciencias de la Salud y Psicopatología del Desarrollo</p>
+        <h1 class="title">Teoría de la Desintegración Positiva: clínica de la intensidad y salud mental evolutiva</h1>
+        <p class="lede">
+          Un análisis médico-psicológico del modelo de Kazimierz Dąbrowski (1902–1980) para distinguir la crisis de transformación de la personalidad frente al trastorno psiquiátrico primario, con énfasis en las Altas Capacidades (AACC), la psicometría y el diagnóstico diferencial.
+        </p>
+
+        <div class="author-meta">
+          <span class="chip" data-status="info">Perspectiva: Doctor en Ciencias de la Salud</span>
+          <span class="chip" data-status="ok">Enfoque: Salud mental positiva (Jahoda / Dąbrowski)</span>
+          <span class="chip" data-status="neutral">Marco empírico y clínica diferencial</span>
+        </div>
+
+        <div class="kpi-grid">
+          <article class="status-card" data-status="info">
+            <p class="kpi-label">Arquitectura evolutiva</p>
+            <p class="kpi-value">5 Niveles</p>
+            <p class="kpi-caption">Jerarquía no cronológica ni universal (9 subniveles operativos en investigación).</p>
+          </article>
+          <article class="status-card" data-status="ok">
+            <p class="kpi-label">Canales de experiencia</p>
+            <p class="kpi-value">5 Tipos de OE</p>
+            <p class="kpi-caption"><em>Nadpobudliwość</em>: reactividad neural elevada en cinco dimensiones.</p>
+          </article>
+          <article class="status-card" data-status="watch">
+            <p class="kpi-label">Motores del cambio</p>
+            <p class="kpi-value">&gt; 20 Dinamismos</p>
+            <p class="kpi-caption">Fuerzas instintivo-afectivas y cognitivas que disuelven lo inferior.</p>
+          </article>
+          <article class="status-card" data-status="alert">
+            <p class="kpi-label">Prioridad diagnóstica</p>
+            <p class="kpi-value">Riesgo iatrogénico</p>
+            <p class="kpi-caption">Evitar confundir intensidad evolutiva con TDAH, bipolaridad, TEA o ansiedad.</p>
+          </article>
+        </div>
+
+        <nav class="toc-nav" aria-label="Índice de secciones clínicas">
+          <a class="toc-link" href="#sec-epistemologia">01 · Salud mental positiva</a>
+          <a class="toc-link" href="#sec-arquitectura">02 · Conceptos y niveles</a>
+          <a class="toc-link" href="#sec-aacc">03 · AACC y diagnóstico diferencial</a>
+          <a class="toc-link" href="#sec-psicometria">04 · Instrumentos y psicometría</a>
+          <a class="toc-link" href="#sec-glosario">05 · Glosario clínico</a>
+          <a class="toc-link" href="#sec-casos">06 · Casos y 3 preguntas clave</a>
+        </nav>
+      </header>
+
+      <!-- =========================================================
+           SECCIÓN 01: INTRODUCCIÓN Y EPISTEMOLOGÍA CLÍNICA
+           ========================================================= -->
+      <section id="sec-epistemologia" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">01 · Fundamentos Epistemológicos en Ciencias de la Salud</p>
+          <h2 class="section-title">Salud mental positiva frente a las visiones reduccionistas y patologizantes</h2>
+        </div>
+
+        <div class="two-col-asymmetric">
+          <div class="prose">
+            <p>
+              Desde la práctica clínica e investigadora en Ciencias de la Salud, uno de los sesgos más persistentes de la psicopatología contemporánea radica en equiparar la salud mental con la mera ausencia de síntomas observables, el equilibrio homeostático o la adaptación funcional sin fricciones al entorno social. Esta postura —heredera del conductismo descriptivo y de modelos clasificatorios centrados exclusivamente en la conducta externa— tiende a interpretar la angustia existencial, el conflicto moral y la hipersensibilidad emocional como disfunciones que deben ser suprimidas.
+            </p>
+            <p>
+              El psiquiatra y psicólogo polaco <strong>Kazimierz Dąbrowski (1902–1980)</strong> formuló la <strong>Teoría de la Desintegración Positiva (TDP)</strong> precisamente para impugnar ese reduccionismo. Apoyándose en la tradición evolutiva del neurólogo Hughlings-Jackson y en el concepto de salud mental positiva propuesto por Marie Jahoda (1958), Dąbrowski sostuvo que el desarrollo auténtico de la personalidad exige la disolución de estructuras psíquicas primitivas, automáticas y egocéntricas para posibilitar una reintegración superior, consciente y autónoma.
+            </p>
+            <p>
+              En su obra seminal <em>Psychoneurosis is not an illness</em> (1972), Dąbrowski definió la salud mental como el desarrollo hacia niveles superiores de funciones mentales, orientado al descubrimiento y realización de valores cognitivos, morales, sociales y estéticos organizados en una jerarquía propia acorde con el <strong>ideal de personalidad</strong> auténtico. En esta arquitectura, las crisis psiconeuróticas no son necesariamente signos de deterioro, sino el equivalente psicológico de la metamorfosis en crisálida: una ruptura dolorosa pero estructuralmente necesaria cuando la conciencia moral supera la mediocridad del entorno.
+            </p>
+          </div>
+
+          <aside class="callout">
+            <p class="kicker">Tesis clínica de Dąbrowski (1972)</p>
+            <h4 class="card-title">“La desintegración es el terreno de nacimiento de una estructura psíquica superior”</h4>
+            <p>
+              Para el clínico, el síntoma aislado carece de valor diagnóstico definitivo. Un mismo cuadro de ansiedad intensa, insomnio o retraimiento puede expresar tanto una descompensación psiquiátrica regresiva como una <strong>desintegración positiva multinivel</strong>. La variable dirimente es la evaluación integral del <em>Potencial de Desarrollo</em> del paciente, no la simple lista de conductas externas.
+            </p>
+          </aside>
+        </div>
+
+        <div class="table-wrap">
+          <table class="clinical-table">
+            <thead>
+              <tr>
+                <th>Eje clínico</th>
+                <th>Modelo reduccionista / patologizante</th>
+                <th>Modelo evolutivo multinivel (TDP)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Criterio de salud mental</strong></td>
+                <td>Ausencia de síntomas, estabilidad afectiva, rendimiento cognitivo normativo y conformidad adaptativa.</td>
+                <td>Progresión hacia niveles superiores de autonomía, autenticidad, empatía universal y jerarquía consciente de valores (Jahoda / Dąbrowski).</td>
+              </tr>
+              <tr>
+                <td><strong>Significado de la crisis y ansiedad</strong></td>
+                <td>Disfunción neuroquímica o desajuste conductual que requiere supresión sintomática inmediata.</td>
+                <td>Posible <em>dinamismo desintegrativo</em> que fractura la integración primaria para liberar el desarrollo vertical.</td>
+              </tr>
+              <tr>
+                <td><strong>Adaptación social</strong></td>
+                <td>La adecuación a la norma grupal se asume como indicador de bienestar psíquico.</td>
+                <td>Distingue entre <em>adaptación negativa</em> (conformismo acrítico) y <em>desadaptación positiva</em> (rechazo ético de normas injustas o hipócritas).</td>
+              </tr>
+              <tr>
+                <td><strong>Sesgo evaluativo</strong></td>
+                <td>Predominio cognitivista (tradición platónica, CI, memoria) y análisis conductual externo sin mundo interno.</td>
+                <td>Diagnóstico multinivel: integra talentos, reactividad neural (OE), emociones rectoras y presencia del Tercer Factor.</td>
+              </tr>
+              <tr>
+                <td><strong>Meta terapéutica</strong></td>
+                <td>Restaurar el estado basal previo y normalizar al sujeto en su entorno.</td>
+                <td>Psicoeducación en el marco evolutivo y <em>autopsicoterapia</em> para que el paciente comprenda y dirija su propia transformación.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SECCIÓN 02: CONCEPTOS PRINCIPALES DE LA TDP
+           ========================================================= -->
+      <section id="sec-arquitectura" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">02 · Arquitectura Conceptual de la Teoría</p>
+          <h2 class="section-title">Potencial de desarrollo, sobreexcitabilidades, dinamismos y cinco niveles</h2>
+        </div>
+
+        <!-- 2.1 Potencial de desarrollo + Simulador -->
+        <div class="wash-band">
+          <div class="two-col-asymmetric">
+            <div>
+              <p class="kicker kicker-teal">2.1 · Potencial de Desarrollo (DP) y los Tres Factores</p>
+              <h3 class="sub-title">¿Por qué algunas personas atraviesan la crisis y crecen, mientras otras quedan atrapadas en el caos?</h3>
+              <p>
+                Dąbrowski denominó <strong>Potencial de Desarrollo (DP)</strong> a la dotación constitucional (genética en interacción con el ambiente) que determina la amplitud y el techo evolutivo que una persona puede alcanzar. El DP se articula en tres componentes principales: <strong>(1) talentos y capacidades especiales</strong>, <strong>(2) las cinco sobreexcitabilidades (OE)</strong> y <strong>(3) el impulso autónomo hacia el autodesarrollo o Tercer Factor</strong>, junto con la constelación emergente de dinamismos.
+              </p>
+              <p>
+                En este sistema operan tres factores reguladores de la conducta: el <strong>Primer Factor</strong> (impulsos biológicos, instintos de autoconservación y herencia), el <strong>Segundo Factor</strong> (influencia del entorno social, educación y normas convencionales) y el <strong>Tercer Factor</strong> (autodeterminación consciente, voluntad y evaluación crítica que afirma «lo que debería ser» frente a «lo que es»).
+              </p>
+
+              <div class="seg-row" style="margin-top: var(--space-md);">
+                <button type="button" class="seg-btn is-active" id="preset-dp-1" onclick="applyDpPreset('primary', this)">Integración Primaria</button>
+                <button type="button" class="seg-btn" id="preset-dp-2" onclick="applyDpPreset('unilevel', this)">Crisis Uninivel (Riesgo)</button>
+                <button type="button" class="seg-btn" id="preset-dp-3" onclick="applyDpPreset('multilevel', this)">Despegue Multinivel</button>
+                <button type="button" class="seg-btn" id="preset-dp-4" onclick="applyDpPreset('blocked', this)">Potencial Bloqueado</button>
+              </div>
+            </div>
+
+            <div class="status-card" id="dp-simulator-panel" data-status="info">
+              <h4 class="card-title">Simulador clínico de vector evolutivo</h4>
+              <p style="font-size: 0.92rem; color: var(--on-surface-variant); margin-top: 0;">
+                Ajuste la intensidad relativa de los factores y sobreexcitabilidades núcleo (INT + IM + EM) para observar el perfil clínico resultante.
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: var(--space-md); margin-top: var(--space-md);">
+                <div class="control-group">
+                  <label class="control-label" for="slider-f1">
+                    <span>Primer Factor (Impulsos biológicos / rigidez)</span>
+                    <span class="control-value" id="val-f1">75%</span>
+                  </label>
+                  <input type="range" id="slider-f1" min="10" max="100" value="75" oninput="updateDpSimulator()">
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="slider-f2">
+                    <span>Segundo Factor (Presión y conformidad social)</span>
+                    <span class="control-value" id="val-f2">80%</span>
+                  </label>
+                  <input type="range" id="slider-f2" min="10" max="100" value="80" oninput="updateDpSimulator()">
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="slider-f3">
+                    <span>Tercer Factor (Autonomía / autoevaluación ética)</span>
+                    <span class="control-value" id="val-f3">15%</span>
+                  </label>
+                  <input type="range" id="slider-f3" min="0" max="100" value="15" oninput="updateDpSimulator()">
+                </div>
+
+                <div class="control-group">
+                  <label class="control-label" for="slider-oe-core">
+                    <span>Tríada OE nuclear (Emocional + Intelectual + Imaginativa)</span>
+                    <span class="control-value" id="val-oe-core">25%</span>
+                  </label>
+                  <input type="range" id="slider-oe-core" min="0" max="100" value="25" oninput="updateDpSimulator()">
+                </div>
+              </div>
+
+              <div style="margin-top: var(--space-lg); padding-top: var(--space-md); border-top: 1px solid var(--outline-variant);">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+                  <strong id="dp-result-title" style="font-family: var(--font-headline);">Nivel I · Integración Primaria</strong>
+                  <span class="chip" id="dp-result-chip" data-status="neutral">Sin conflicto vertical</span>
+                </div>
+                <div class="meter-track" aria-hidden="true">
+                  <div class="meter-range-band" title="Banda de desarrollo multinivel autónomo"></div>
+                  <div class="meter-fill" id="dp-meter-fill" style="width: 20%;"></div>
+                </div>
+                <p id="dp-result-desc" style="font-size: 0.94rem; margin: var(--space-sm) 0 0 0; color: var(--on-surface);"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.2 Las Cinco Sobreexcitabilidades -->
+        <div>
+          <p class="kicker kicker-teal">2.2 · Las Cinco Sobreexcitabilidades (Nadpobudliwość)</p>
+          <h3 class="sub-title">Canales neurológicos de superestimulabilidad e intensificación de la experiencia</h3>
+          <div class="prose" style="margin-bottom: var(--space-lg);">
+            <p>
+              El término <strong>sobreexcitabilidad (OE)</strong> traduce el vocablo polaco <em>nadpobudliwość</em> («superestimulabilidad»). Dąbrowski documentó neurológicamente que ciertas personas presentan una reactividad del sistema nervioso central superior en intensidad, duración y frecuencia ante los estímulos. Piechowski (1979) las conceptualizó como cinco canales o filtros cromáticos por los que fluye la información experiencial. Aunque las cinco formas enriquecen la vivencia, la investigación dąbrowskiana subraya que las sobreexcitabilidades <strong>emocional, intelectual e imaginativa</strong> son las determinantes directas para ascender a niveles multinivel superiores.
+            </p>
+          </div>
+
+          <div class="seg-row" role="tablist" aria-label="Selector de las cinco sobreexcitabilidades" style="margin-bottom: var(--space-md);">
+            <button type="button" class="seg-btn is-active" onclick="selectOe('PS', this)">Psicomotora (PS)</button>
+            <button type="button" class="seg-btn" onclick="selectOe('SE', this)">Sensorial (SE)</button>
+            <button type="button" class="seg-btn" onclick="selectOe('INT', this)">Intelectual (INT)</button>
+            <button type="button" class="seg-btn" onclick="selectOe('IM', this)">Imaginativa (IM)</button>
+            <button type="button" class="seg-btn" onclick="selectOe('EM', this)">Emocional (EM)</button>
+          </div>
+
+          <div class="two-col-asymmetric">
+            <article class="status-card" id="oe-detail-card" data-status="info">
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap; margin-bottom: var(--space-sm);">
+                <h4 class="card-title" id="oe-title" style="margin: 0;">Sobreexcitabilidad Psicomotora (PS)</h4>
+                <span class="chip" id="oe-weight-chip" data-status="info">Canal de descarga neuromuscular</span>
+              </div>
+              <p id="oe-desc" style="margin: 0 0 var(--space-md) 0;"></p>
+              <div style="display: grid; gap: var(--space-sm); border-top: 1px solid var(--outline-variant); padding-top: var(--space-md);">
+                <div>
+                  <span class="kpi-label">Manifestaciones clínicas observables</span>
+                  <p id="oe-manifest" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+                </div>
+                <div>
+                  <span class="kpi-label">Valor funcional y riesgo de error diagnóstico</span>
+                  <p id="oe-clinical" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+                </div>
+              </div>
+            </article>
+
+            <div class="chart-card">
+              <h4 class="card-title">Heterogeneidad empírica en AACC: 4 conglomerados de OE</h4>
+              <p style="font-size: 0.88rem; color: var(--on-surface-variant); margin: 0 0 var(--space-md) 0;">
+                Medias estandarizadas (puntuaciones <em>z</em>) por conglomerado en adolescentes con AACC (Rinn et al., 2010; N = 379). Demuestra que las AACC no presentan un perfil único uniforme.
+              </p>
+              <div class="chart-box">
+                <canvas id="oe-clusters-chart"></canvas>
+              </div>
+              <p class="chart-caption">
+                Fuente: Rinn et al. (2010), <em>Gifted Child Quarterly</em>, 54(1). La banda verde sombreada representa la zona media normativa (±0,25 DE).
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2.3 Cinco Niveles de Desarrollo -->
+        <div>
+          <p class="kicker kicker-teal">2.3 · Los Cinco Niveles de Desarrollo (I a V)</p>
+          <h3 class="sub-title">Una jerarquía de organización psíquica, no una secuencia cronológica de etapas</h3>
+          <div class="prose" style="margin-bottom: var(--space-lg);">
+            <p>
+              A diferencia de modelos evolutivos vinculados a la edad biológica (como Piaget o Erikson), Dąbrowski insistió en que sus niveles describen grados cualitativos de organización de la personalidad —comparables a «escalar una montaña»— y no etapas automáticas ni universales. Una misma persona puede funcionar en un nivel distinto según el dominio vital, y existen cuatro transiciones intermedias que configuran una escala operativa de <strong>nueve niveles</strong> (Miller &amp; Silverman, 1987). Solo una minoría alcanza la Integración Secundaria.
+            </p>
+          </div>
+
+          <div class="levels-grid">
+            <div class="level-step-list" role="tablist" aria-label="Niveles de la Teoría de la Desintegración Positiva">
+              <button type="button" class="level-step-btn" data-tier="I" aria-selected="true" onclick="selectLevel(1, this)">
+                <span class="level-code">Nivel I</span>
+                <span class="level-name">Integración Primaria</span>
+                <span class="chip" data-status="neutral">Uninivel</span>
+              </button>
+              <button type="button" class="level-step-btn" data-tier="II" aria-selected="false" onclick="selectLevel(2, this)">
+                <span class="level-code">Nivel II</span>
+                <span class="level-name">Desintegración Uninivel</span>
+                <span class="chip" data-status="alert">Crisis horizontal</span>
+              </button>
+              <button type="button" class="level-step-btn" data-tier="III" aria-selected="false" onclick="selectLevel(3, this)">
+                <span class="level-code">Nivel III</span>
+                <span class="level-name">Desintegración Multinivel Espontánea</span>
+                <span class="chip" data-status="watch">Ruptura vertical</span>
+              </button>
+              <button type="button" class="level-step-btn" data-tier="IV" aria-selected="false" onclick="selectLevel(4, this)">
+                <span class="level-code">Nivel IV</span>
+                <span class="level-name">Desintegración Multinivel Organizada</span>
+                <span class="chip" data-status="ok">Autodirección</span>
+              </button>
+              <button type="button" class="level-step-btn" data-tier="V" aria-selected="false" onclick="selectLevel(5, this)">
+                <span class="level-code">Nivel V</span>
+                <span class="level-name">Integración Secundaria</span>
+                <span class="chip" data-status="ok">Armonía ética</span>
+              </button>
+            </div>
+
+            <article class="status-card" id="level-detail-card" data-status="info">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-sm);">
+                <h4 class="card-title" id="lvl-title" style="margin: 0;">Nivel I · Integración Primaria</h4>
+                <span class="chip" id="lvl-badge" data-status="neutral">Cohesión egocéntrica / sin conflicto</span>
+              </div>
+              <p id="lvl-summary" style="margin: 0 0 var(--space-md) 0;"></p>
+              <div style="display: grid; gap: var(--space-sm); border-top: 1px solid var(--outline-variant); padding-top: var(--space-md);">
+                <div>
+                  <span class="kpi-label">Dinamismos y procesos predominantes</span>
+                  <p id="lvl-dynamisms" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+                </div>
+                <div>
+                  <span class="kpi-label">Implicación clínica y pronóstico</span>
+                  <p id="lvl-clinical" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+                </div>
+                <div>
+                  <span class="kpi-label">Ejemplos y referentes en la literatura</span>
+                  <p id="lvl-examples" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem; color: var(--on-surface-variant);"></p>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- 2.4 Dinamismos del desarrollo -->
+        <div class="wash-band">
+          <p class="kicker kicker-teal">2.4 · Dinamismos del Desarrollo</p>
+          <h3 class="sub-title">Las fuerzas psíquicas que ejecutan la desintegración y la reconstrucción</h3>
+          <div class="prose" style="margin-bottom: var(--space-md);">
+            <p>
+              Dąbrowski consideraba que su aportación más original no era la idea de crisis evolutiva en sí, sino la identificación sistemática de más de veinte <strong>dinamismos</strong>: fuerzas biológicas o mentales —combinaciones de instintos, impulsos y procesos intelectuales fusionados con emociones— que controlan la conducta y generan la transformación interna. Como señaló Piechowski (1975), los dinamismos «no son fuerzas que provocan la desintegración; <em>son</em> la desintegración».
+            </p>
+          </div>
+
+          <div class="seg-row" style="margin-bottom: var(--space-md);">
+            <button type="button" class="seg-btn is-active" onclick="filterDynamisms('all', this)">Todos los niveles</button>
+            <button type="button" class="seg-btn" onclick="filterDynamisms('L2', this)">Nivel II · Uninivel</button>
+            <button type="button" class="seg-btn" onclick="filterDynamisms('L3', this)">Nivel III · Multinivel espontáneo</button>
+            <button type="button" class="seg-btn" onclick="filterDynamisms('L45', this)">Niveles IV–V · Organizado y secundario</button>
+          </div>
+
+          <div class="card-grid" id="dynamisms-grid"></div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SECCIÓN 03: RELACIÓN CON LAS ALTAS CAPACIDADES (AACC)
+           ========================================================= -->
+      <section id="sec-aacc" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">03 · Psicopatología del Desarrollo y Altas Capacidades</p>
+          <h2 class="section-title">Asincronía, intensidad emocional, depresión existencial y diagnóstico diferencial</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Aunque Potencial de Desarrollo y Altas Capacidades intelectuales (AACC) no son sinónimos —muchas personas con alto DP no figuran en programas de talento y muchas personas con alto CI exhiben bajo DP—, la investigación clínica demuestra que la población con AACC tiende a concentrar niveles elevados de sobreexcitabilidad emocional, intelectual e imaginativa. Esto predispone a una experiencia subjetiva cualitativamente distinta que, sin un marco evolutivo, suele derivar en diagnósticos psiquiátricos erróneos.
+          </p>
+        </div>
+
+        <div class="two-col-equal">
+          <article class="status-card" data-status="info">
+            <h4 class="card-title">Desarrollo asincrónico y «realidad teórica»</h4>
+            <p style="margin: 0; font-size: 0.96rem;">
+              La asincronía surge cuando el razonamiento abstracto, la imaginación moral y la empatía avanzan muy por delante de la edad cronológica, el desarrollo motor o la madurez emocional de los pares. Como describe Susan Jackson, las mentes altamente dotadas habitan con naturalidad una <strong>realidad teórica</strong> de abstracción e intuición donde «lo que debería ser» pesa más que la realidad cotidiana convencional, generando un profundo sentimiento de extrañeza o aislamiento (<em>The Lemming Condition</em>).
+            </p>
+          </article>
+
+          <article class="status-card" data-status="watch">
+            <h4 class="card-title">Intensidad emocional frente a inestabilidad afectiva</h4>
+            <p style="margin: 0; font-size: 0.96rem;">
+              Piechowski y Miller (1995) advierten que la OE emocional no significa labilidad o capricho («emotional unsteadiness»), sino profundidad de apego, compasión aguda y resonancia prolongada ante el sufrimiento ajeno. En el estudio cualitativo de Guthrie (2019), niños con AACC lloran inconsolablemente durante días tras conocer la existencia del hambre mundial o desarrollan angustia anticipatoria nocturna ante fenómenos cósmicos.
+            </p>
+          </article>
+
+          <article class="status-card" data-status="alert">
+            <h4 class="card-title">Depresión existencial y defensas fallidas</h4>
+            <p style="margin: 0; font-size: 0.96rem;">
+              Al colapsar las normas heredadas por escrutinio consciente, surge la depresión existencial: dolor por la finitud, la soledad ontológica y la hipocresía social (Mendaglio, 2008). Para anestesiar ese vacío, algunos sujetos recurren al narcisismo defensivo, al dogmatismo de «poseer la verdad absoluta» o a la búsqueda de riesgo extremo (personalidad Tipo «T» de Farley, con riesgo de adicciones).
+            </p>
+          </article>
+
+          <article class="status-card" data-status="ok">
+            <h4 class="card-title">Taxonomía de la adaptación: el papel de la desadaptación positiva</h4>
+            <p style="margin: 0; font-size: 0.96rem;">
+              Dąbrowski distingue tres modos de ajuste: <strong>(a) adaptación negativa</strong> (conformidad automática a valores sociales acríticos), <strong>(b) desadaptación negativa o unilateral</strong> (conducta antisocial y egocéntrica a costa de otros, como en la criminalidad) y <strong>(c) desadaptación positiva</strong> (conflicto consciente y ético contra normas percibidas como injustas en defensa de valores superiores).
+            </p>
+          </article>
+        </div>
+
+        <!-- Comparador Interactivo de Diagnóstico Diferencial -->
+        <div class="wash-band">
+          <p class="kicker kicker-teal">Herramienta de cribado clínico diferencial</p>
+          <h3 class="sub-title">Diagnóstico diferencial frente a errores clínicos frecuentes en AACC</h3>
+          <p style="font-size: 0.96rem; color: var(--on-surface-variant); max-width: 65ch; margin: 0 0 var(--space-md) 0;">
+            Seleccione un cuadro diagnóstico para contrastar las manifestaciones compartidas, los marcadores de trastorno psiquiátrico primario y los indicadores evolutivos de la TDP (Flint, 2001; Cash, 1999; Guthrie, 2019; Mika, 2007).
+          </p>
+
+          <div class="seg-row" style="margin-bottom: var(--space-md);">
+            <button type="button" class="seg-btn is-active" onclick="selectDiff('tdah', this)">TDAH vs. OE Psicomotora / Intelectual</button>
+            <button type="button" class="seg-btn" onclick="selectDiff('bipolar', this)">Trastorno Bipolar vs. Desintegración II–III</button>
+            <button type="button" class="seg-btn" onclick="selectDiff('ansiedad', this)">Ansiedad / Depresión Mayor vs. Crisis Existencial</button>
+            <button type="button" class="seg-btn" onclick="selectDiff('tea', this)">TEA Alto Funcionamiento vs. OE Sensorial / Asincronía</button>
+          </div>
+
+          <div id="diff-panel">
+            <article class="status-card" data-status="info" style="margin-bottom: var(--space-md);">
+              <span class="kpi-label">Fenomenología superficial compartida</span>
+              <h4 class="card-title" id="diff-shared-title"></h4>
+              <p id="diff-shared-desc" style="margin: 0; font-size: 0.96rem;"></p>
+            </article>
+
+            <div class="two-col-equal">
+              <article class="status-card" data-status="alert">
+                <span class="kpi-label">Indicadores de Trastorno Clínico Primario</span>
+                <p id="diff-pathology" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+              </article>
+              <article class="status-card" data-status="ok">
+                <span class="kpi-label">Indicadores de Sobreexcitabilidad / TDP</span>
+                <p id="diff-tdp" style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem;"></p>
+              </article>
+            </div>
+
+            <div class="callout" style="margin-top: var(--space-md);">
+              <span class="kpi-label" style="color: var(--on-primary-container);">Criterio dirimente para el Doctor en Ciencias de la Salud</span>
+              <p id="diff-key" style="margin: var(--space-xs) 0 0 0; font-size: 0.96rem;"></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SECCIÓN 04: CUESTIONARIOS E INSTRUMENTOS DE EVALUACIÓN
+           ========================================================= -->
+      <section id="sec-psicometria" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">04 · Psicometría y Evaluación Clínica</p>
+          <h2 class="section-title">Cuestionarios e instrumentos de evaluación en investigación y práctica clínica</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            La operacionalización empírica de la TDP ha avanzado mediante instrumentos diseñados para capturar tanto el componente cuantitativo de las sobreexcitabilidades como la estructura cualitativa de los niveles de desarrollo y los dinamismos. Desde una perspectiva metodológica rigurosa, ningún autoinforme sustituye a la evaluación clínica multinivel longitudinal.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="clinical-table">
+            <thead>
+              <tr>
+                <th>Instrumento / Método</th>
+                <th>Formato y constructo evaluado</th>
+                <th>Propiedades psicométricas y evidencia empírica en fuentes</th>
+                <th>Aplicabilidad clínica y limitaciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>OEQ</strong><br><span style="color: var(--on-surface-variant); font-size: 0.85rem;">Overexcitability Questionnaire</span></td>
+                <td>Cuestionario de respuesta abierta (preguntas tipo estímulo narrativo, ej. diálogos internos en la mente). Evalúa las 5 formas de OE cualitativamente.</td>
+                <td>Requiere codificación por jueces entrenados bajo el modelo dimensional de Piechowski (1979). Elevada validez ecológica y riqueza fenomenológica para detectar metáforas, humor complejo e introspección.</td>
+                <td><span class="chip" data-status="info">Alta riqueza clínica</span><br><span style="display: block; margin-top: var(--space-xs); font-size: 0.9rem;">Útil como diario terapéutico o estímulo de escritura diaria; exige alto tiempo de corrección en muestras grandes.</span></td>
+              </tr>
+              <tr>
+                <td><strong>OEQ-II</strong><br><span style="color: var(--on-surface-variant); font-size: 0.85rem;">Falk, Lind, Miller, Piechowski &amp; Silverman</span></td>
+                <td>Escala cuantitativa de autoinforme en formato Likert de 5 puntos (Piirto, 2010 propuso ampliarla a 7 puntos para mayor sensibilidad discriminatoria). Evalúa PS, SE, IM, INT y EM.</td>
+                <td>Replicación transcultural documentada en 5 países (Falk et al., 2008); estudios comparativos en EE. UU. y Corea (<em>gl</em> = 565; diferencias significativas de sexo en EM: <em>F</em> = 17,95, <em>p</em> &lt; 0,001, η² = 0,031; diferencias entre grupos en EM: <em>F</em> = 38,28, <em>p</em> &lt; 0,001 y SE: <em>F</em> = 7,70, <em>p</em> = 0,006), Turquía y Hong Kong; análisis de conglomerados en AACC (Rinn et al., 2010).</td>
+                <td><span class="chip" data-status="ok">Estándar cuantitativo</span><br><span style="display: block; margin-top: var(--space-xs); font-size: 0.9rem;">Rápido cribado de perfiles OE en investigación y clínica. <strong>Advertencia (Tillier, 2009; Mika, 2009):</strong> no mide dinamismos ni nivel evolutivo.</span></td>
+              </tr>
+              <tr>
+                <td><strong>Sistema de Codificación de Niveles (Miller)</strong><br><span style="color: var(--on-surface-variant); font-size: 0.85rem;">Miller (1985); Miller &amp; Silverman (1987)</span></td>
+                <td>Codificación estructural de respuestas abiertas en 3 ejes: (1) valores, (2) sentimientos hacia sí mismo y (3) sentimientos hacia los demás.</td>
+                <td>Operacionaliza la progresión a través de los 5 niveles principales y 4 niveles intermedios (escala de 9 posiciones evolutivas), diferenciando estructuras uninivel de multinivel.</td>
+                <td><span class="chip" data-status="info">Evaluación estructural</span><br><span style="display: block; margin-top: var(--space-xs); font-size: 0.9rem;">Imprescindible para evaluar si existe desintegración multinivel real o mero malestar uninivel.</span></td>
+              </tr>
+              <tr>
+                <td><strong>Escalas complementarias y autobiografía clínica</strong><br><span style="color: var(--on-surface-variant); font-size: 0.85rem;">Dąbrowski; Escala de vacío existencial</span></td>
+                <td>Escalas de vivencia de vacío y preocupación existencial, entrevistas clínicas multinivel, análisis biográfico y ejercicio «Escudo de Armas Personal».</td>
+                <td>Fundamentación clínica cualitativa basada en análisis de casos longitudinales de Dąbrowski y en el estudio de biografías de creadores y figuras históricas (Gandhi, Hillesum, Roosevelt).</td>
+                <td><span class="chip" data-status="watch">Uso autopsicoterapéutico</span><br><span style="display: block; margin-top: var(--space-xs); font-size: 0.9rem;">Permite distinguir valores auténticos de «barnices de conveniencia» y activar la autoobservación reflexiva del paciente.</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout">
+          <h4 class="card-title">Nota metodológica sobre el uso clínico exclusivo del OEQ-II</h4>
+          <p style="margin: 0;">
+            Como advierten Elizabeth Mika y William Tillier (2009), reducir la teoría de Dąbrowski a las puntuaciones del OEQ-II equivale a «describir planetas aislados sin mencionar la existencia del universo». La evaluación clínica rigurosa exige triangular el perfil de sobreexcitabilidad con la presencia de <strong>dinamismos transformadores</strong>, el <strong>Tercer Factor</strong> y el <strong>contexto sintomatológico longitudinal</strong>, ya que las sobreexcitabilidades también aparecen en cuadros psiquiátricos no evolutivos cuando no logran canalizarse hacia un medio psíquico interno.
+          </p>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           SECCIÓN 05: GLOSARIO CLÍNICO Y TERMINOLÓGICO EXHAUSTIVO
+           ========================================================= -->
+      <section id="sec-glosario" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">05 · Terminología Especializada</p>
+          <h2 class="section-title">Glosario clínico y conceptual exhaustivo de la TDP</h2>
+        </div>
+
+        <div class="glossary-controls">
+          <div class="control-group">
+            <label class="control-label" for="glossary-search">Buscar término, concepto clínico o equivalente original</label>
+            <input type="search" id="glossary-search" class="text-input" placeholder="Ej.: Tercer Factor, autopsicoterapia, asincronía…" oninput="renderGlossary()">
+          </div>
+          <div class="control-group">
+            <label class="control-label" for="glossary-category">Filtrar por dominio conceptual</label>
+            <select id="glossary-category" class="select-input" onchange="renderGlossary()">
+              <option value="all">Todos los dominios (24 términos)</option>
+              <option value="axiomas">Axiomas y Factores</option>
+              <option value="oe">Sobreexcitabilidades</option>
+              <option value="dinamismos">Dinamismos</option>
+              <option value="niveles">Niveles y Estados</option>
+              <option value="clinica">Clínica y Evaluación</option>
+            </select>
+          </div>
+        </div>
+
+        <p id="glossary-count" style="font-family: var(--font-label); font-size: var(--label-size); font-weight: 600; color: var(--on-surface-variant); margin: 0;"></p>
+
+        <div class="glossary-grid" id="glossary-grid"></div>
+      </section>
+
+      <!-- =========================================================
+           SECCIÓN 06: CASOS CLÍNICOS Y 3 PREGUNTAS CLAVE DE REFLEXIÓN
+           ========================================================= -->
+      <section id="sec-casos" class="section-block reveal">
+        <div class="section-header">
+          <p class="kicker">06 · Aplicación Clínica y Razonamiento Diagnóstico</p>
+          <h2 class="section-title">Casos clínicos documentados y tres preguntas clave de diagnóstico diferencial</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            A continuación se presentan tres viñetas clínicas documentadas en la literatura especializada sobre TDP y AACC, seguidas de tres interrogantes nucleares para el razonamiento diagnóstico del profesional de la salud.
+          </p>
+        </div>
+
+        <!-- Casos Clínicos -->
+        <div class="seg-row" style="margin-bottom: var(--space-sm);">
+          <button type="button" class="seg-btn is-active" onclick="selectCase(0, this)">Caso 1 · «Lael» (Adolescente, crisis aguda)</button>
+          <button type="button" class="seg-btn" onclick="selectCase(1, this)">Caso 2 · «Nicholas» y «Jack» (Infancia temprana)</button>
+          <button type="button" class="seg-btn" onclick="selectCase(2, this)">Caso 3 · «El optimista quemado» y «Bubber»</button>
+        </div>
+
+        <article class="case-details" id="case-display">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+            <h3 class="sub-title" id="case-title" style="margin: 0;"></h3>
+            <span class="chip" id="case-source" data-status="info"></span>
+          </div>
+          <p id="case-presentation" style="margin: var(--space-md) 0 0 0;"></p>
+          <div class="case-grid">
+            <div class="status-card" data-status="alert">
+              <span class="kpi-label">Riesgo de error diagnóstico</span>
+              <p id="case-risk" style="margin: var(--space-xs) 0 0 0; font-size: 0.94rem;"></p>
+            </div>
+            <div class="status-card" data-status="info">
+              <span class="kpi-label">Lectura desde la TDP</span>
+              <p id="case-tdp" style="margin: var(--space-xs) 0 0 0; font-size: 0.94rem;"></p>
+            </div>
+            <div class="status-card" data-status="ok">
+              <span class="kpi-label">Conducta clínica y terapéutica</span>
+              <p id="case-conduct" style="margin: var(--space-xs) 0 0 0; font-size: 0.94rem;"></p>
+            </div>
+          </div>
+        </article>
+
+        <!-- 3 Preguntas Clave de Reflexión Clínica -->
+        <div style="margin-top: var(--space-md);">
+          <p class="kicker kicker-teal">Evaluación interactiva del juicio clínico</p>
+          <h3 class="sub-title">Tres preguntas clave de reflexión clínica y diagnóstico diferencial</h3>
+          <p style="font-size: 0.96rem; color: var(--on-surface-variant); max-width: 65ch; margin: 0 0 var(--space-lg) 0;">
+            Seleccione la hipótesis clínica que considere más sólida en cada escenario para contrastarla con el análisis explicativo fundamentado en Ciencias de la Salud y la TDP.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: var(--space-lg);" id="questions-container"></div>
+        </div>
+      </section>
+
+      <!-- =========================================================
+           FUENTES Y REFERENCIAS BIBLIOGRÁFICAS
+           ========================================================= -->
+      <footer class="sources-footer">
+        <p class="kicker">Fuentes y bibliografía de referencia</p>
+        <p style="margin: 0 0 var(--space-sm) 0;">
+          Elaboración clínica basada en los trabajos originales de Kazimierz Dąbrowski (<em>Personality-Shaping through Positive Disintegration</em>, 1967; <em>Mental Growth through Positive Disintegration</em>, 1970; <em>Psychoneurosis is not an Illness</em>, 1972; <em>Multilevelness of Emotional and Instinctive Functions</em>, 1996) y en la investigación empírica y clínica contemporánea de Michael M. Piechowski, William Tillier, Sal Mendaglio, R. Frank Falk, Nancy B. Miller, Linda K. Silverman, Susan Daniels, Susan Jackson, Vicky Frankfourth Moyle, Elizabeth Mika, Kate H. Guthrie, Anne N. Rinn, Jane Piirto, Anna Mróz, Carol L. Tieso, C. Cash, E. Flint y Kok Hwee Chia &amp; Boon Hock Lim.
+        </p>
+        <p style="margin: 0;">
+          Este documento tiene carácter académico y de divulgación científica especializada para profesionales de la salud; no sustituye la evaluación diagnóstica individualizada presencial.
+        </p>
+      </footer>
+
+    </main>
+  </div>
+
+  <script>
+    /* =========================================================================
+       DATOS ESTRUCTURADOS (template literals con comillas invertidas seguras)
+       ========================================================================= */
+
+    var OE_DATA = {
+      PS: {
+        title: `Sobreexcitabilidad Psicomotora (PS)`,
+        chip: `Activación neuromuscular`,
+        status: `info`,
+        desc: `Representa un excedente orgánico de energía y una excitabilidad aumentada del sistema neuromuscular. Se expresa como necesidad de movimiento continuo, presión para la acción, habla rápida y entusiasmo motor intenso.`,
+        manifest: `Inquietud motora, dificultad para permanecer sentado en contextos rígidos, competitividad intensa, actividad física sostenida, hábitos nerviosos o compulsivos ante tensión acumulada.`,
+        clinical: `Valor funcional: canaliza energía vital hacia proyectos y logros. Trampa diagnóstica: suele confundirse automáticamente con TDAH de presentación hiperactiva-impulsiva cuando el entorno escolar o laboral no ofrece suficiente estimulación cognitiva.`
+      },
+      SE: {
+        title: `Sobreexcitabilidad Sensorial (SE)`,
+        chip: `Agudeza perceptual`,
+        status: `watch`,
+        desc: `Consiste en una diferenciación y vivacidad aumentada de la experiencia sensorial (gusto, olfato, tacto, visión, audición). Puede manifestarse tanto como búsqueda placentera estética como en forma de rechazo intenso a estímulos invasivos.`,
+        manifest: `Deleite profundo por texturas, música, arte o sabores; simultáneamente, intolerancia marcada a etiquetas de ropa, costuras, ruidos ambientales, luces fluorescentes o entornos caóticos (Guthrie, 2019; Rinn et al., 2010).`,
+        clinical: `Valor funcional: sensibilidad estética y apreciación del detalle sensorial. Trampa diagnóstica: las conductas de evitación sensorial o búsqueda de calma pueden interpretarse erróneamente como hipersensibilidad propia del TEA o como trastorno de procesamiento sensorial aislado.`
+      },
+      INT: {
+        title: `Sobreexcitabilidad Intelectual (INT)`,
+        chip: `Motor epistemológico`,
+        status: `ok`,
+        desc: `No equivale a «alto CI», sino a una avidez insaciable por el conocimiento, la búsqueda de verdad, el análisis lógico, la formulación de preguntas incisivas y la preocupación sostenida por problemas teóricos y éticos.`,
+        manifest: `Cuestionamiento persistente de premisas dadas, pensamiento simbólico, síntesis conceptual autónoma, diálogos internos prolongados, necesidad de precisión terminológica y lectura o análisis profundo hasta altas horas.`,
+        clinical: `Valor funcional: junto con IM y EM, es indispensable para el pensamiento crítico y la desintegración multinivel. Trampa diagnóstica: la insistencia cuestionadora puede leerse como oposicionismo desafiante, obsesividad (TOC) o rigidez social.`
+      },
+      IM: {
+        title: `Sobreexcitabilidad Imaginativa (IM)`,
+        chip: `Motor creativo y simbólico`,
+        status: `ok`,
+        desc: `Abarca la riqueza de imágenes mentales, metáforas, personificaciones, ensueños, invención de mundos y capacidad para visualizar escenarios alternativos. Permite percibir realidades posibles más allá de lo concreto inmediato.`,
+        manifest: `Uso espontáneo de metáforas complejas, dramatización, pesadillas vívidas o terrores nocturnos ante amenazas abstractas (ej. agujeros negros), mezcla lúdica de fantasía y realidad en la infancia y fuerte anticipación de escenarios («¿y si ocurre…?»).`,
+        clinical: `Valor funcional: sustenta la creatividad visionaria y permite imaginar el ideal de «lo que debería ser». Trampa diagnóstica: la ensoñación intensa se confunde con déficit atencional inatento, y la imaginería simbólica o pesadillas con ansiedad generalizada o sintomatología psicótica.`
+      },
+      EM: {
+        title: `Sobreexcitabilidad Emocional (EM)`,
+        chip: `Eje central de la TDP`,
+        status: `ok`,
+        desc: `Se refiere a la profundidad, intensidad y duración de las sensaciones afectivas, los vínculos de apego, la empatía compasiva hacia personas, animales o el sufrimiento humano y la conciencia del enigma de la existencia.`,
+        manifest: `Compasión intensa ante el sufrimiento ajeno, inhibición (timidez) o excitación afectiva marcada, memoria emocional duradera, sentido agudo de responsabilidad, temor a la muerte o a la pérdida y angustia por la soledad existencial.`,
+        clinical: `Valor funcional: Dąbrowski sitúa la EM como la piedra angular del desarrollo moral superior (Nivel IV–V). Trampa diagnóstica: la tristeza profunda ante injusticias o crisis vitales se patologiza con frecuencia como episodio depresivo mayor o ciclotimia.`
+      }
+    };
+
+    var LEVELS_DATA = {
+      1: {
+        title: `Nivel I · Integración Primaria`,
+        badge: `Cohesión automática / sin conflicto vertical`,
+        status: `info`,
+        summary: `Estructura psíquica rígida y cohesionada gobernada por el Primer Factor (impulsos biológicos y autoprotección) y el Segundo Factor (conformismo acrítico con las normas sociales). No existe reflexión moral autónoma ni brecha entre «lo que es» y «lo que debería ser».`,
+        dynamisms: `Ausencia de dinamismos de desintegración. Si surgen conflictos, son estrictamente externos (frustración ante obstáculos para gratificar deseos). La adaptación es automática o «adaptación negativa».`,
+        clinical: `Raramente consulta por malestar existencial; puede presentar alta eficiencia adaptativa social o, en su polo extremo, conductas instrumentales manipuladoras o psicopáticas sin culpa. Sin Potencial de Desarrollo positivo, no evoluciona hacia niveles superiores.`,
+        examples: `Sujeto puramente convencional orientado al estatus, poder o gratificación inmediata, sin autoexamen ético.`
+      },
+      2: {
+        title: `Nivel II · Desintegración Uninivel`,
+        badge: `Riesgo clínico elevado / crisis horizontal`,
+        status: `alert`,
+        summary: `Se produce una ruptura o aflojamiento de la integración primaria ante transiciones vitales (pubertad, duelos, fracasos laborales o relacionales). Los conflictos son horizontales: el sujeto oscila entre impulsos o mandatos sociales del mismo rango moral sin una jerarquía superior que los ordene.`,
+        dynamisms: `Predominan la ambivalencia (amor/odio simultáneos), la ambitendencia (impulsos contradictorios de acción), oscilaciones anímicas intensas, ansiedad difusa y desorientación.`,
+        clinical: `Es el nivel de mayor vulnerabilidad clínica. Si el paciente permanece estancado aquí sin emerger el eje vertical (Nivel III), puede derivar en desintegración negativa: cronificación depresiva, alcoholismo, abuso de sustancias, trastornos graves de conducta o riesgo suicida.`,
+        examples: `Adolescente o adulto abrumado por presiones contrapuestas sin criterio propio estable; casos límite donde la crisis exige contención clínica cuidadosa.`
+      },
+      3: {
+        title: `Nivel III · Desintegración Multinivel Espontánea`,
+        badge: `Aparición de la jerarquía vertical`,
+        status: `watch`,
+        summary: `Punto de inflexión evolutivo. Por primera vez, la persona percibe distintos niveles de realidad interna y externa: contrasta dolorosamente «lo que es» (sus impulsos o la hipocresía social) frente a «lo que debería ser» (valores superiores intuidos).`,
+        dynamisms: `Irrumpen de forma espontánea dinamismos verticales: asombro consigo mismo, desasosiego y ansiedad sobre sí mismo, sentimiento de inferioridad hacia el propio ideal, descontento consigo mismo, vergüenza, culpa moral y desadaptación positiva.`,
+        clinical: `Aunque el sufrimiento subjetivo es muy intenso (fenómeno del «optimista quemado», Maxwell, 1992), posee un pronóstico evolutivo favorable si recibe psicoeducación adecuada. La psiconeurosis en este nivel actúa como mecanismo protector frente a la patología crónica.`,
+        examples: `Jóvenes y adultos con AACC en crisis existencial profunda, artistas atormentados que cuestionan su coherencia ética.`
+      },
+      4: {
+        title: `Nivel IV · Desintegración Multinivel Organizada`,
+        badge: `Autonomía consciente y autopsicoterapia`,
+        status: `ok`,
+        summary: `El proceso de transformación deja de ser puramente espontáneo y pasa a estar dirigido de forma consciente y deliberada por el propio individuo. Se consolida el medio psíquico interno y el comportamiento se alinea con una jerarquía de valores libremente elegida.`,
+        dynamisms: `Tercer Factor (autodeterminación), sujeto-objeto en uno mismo (autoobservación objetiva), transformación psíquica interna, educación de uno mismo, autopsicoterapia, autocontrol, autenticidad, responsabilidad y empatía profunda.`,
+        clinical: `Disminuye la angustia caótica del Nivel III; persiste tensión creativa y exigencia ética, pero canalizada en acción constructiva y servicio. La terapia aquí tiene como meta volverse innecesaria, potenciando la autopsicoterapia del paciente.`,
+        examples: `Etty Hillesum, Eleanor Roosevelt, creadores maduros y profesionales guiados por una ética autónoma.`
+      },
+      5: {
+        title: `Nivel V · Integración Secundaria`,
+        badge: `Vértice del desarrollo / armonía ética`,
+        status: `ok`,
+        summary: `Reintegración completa de todas las funciones mentales en una estructura armoniosa dirigida por las emociones superiores. Desaparece el conflicto interno destructivo porque los impulsos inferiores han sido superados y la conducta coincide de modo natural con el ideal de personalidad.`,
+        dynamisms: `Ideal de personalidad plenamente activo, autonomía, autentismo, responsabilidad universal, amor y compasión sin exclusiones, fusión flexible de cognición y emoción. No es estancamiento homeostático, sino paz dinámica al servicio del bien común.`,
+        clinical: `No presenta patología clínica. Representa el estándar máximo de salud mental positiva en la teoría de Dąbrowski.`,
+        examples: `Ejemplos históricos analizados en la literatura de la TDP: Mahatma Gandhi, Dag Hammarskjöld, Juan XXIII, el obispo Desmond Tutu, Madre Teresa, Dalai Lama y Peace Pilgrim.`
+      }
+    };
+
+    var DYNAMISMS_DATA = [
+      { name: `Ambivalencia`, tier: `L2`, label: `Nivel II · Uninivel`, status: `alert`, desc: `Oscilación paralizante entre emociones opuestas (amor/odio, atracción/rechazo) sin criterio superior que resuelva el conflicto.` },
+      { name: `Ambitendencia`, tier: `L2`, label: `Nivel II · Uninivel`, status: `alert`, desc: `Impulsos de acción contradictorios simultáneos o alternantes que generan bloqueo conductual, indecisión y desgaste psíquico.` },
+      { name: `Asombro consigo mismo`, tier: `L3`, label: `Nivel III · Espontáneo`, status: `watch`, desc: `Primer distanciamiento reflexivo ante los propios impulsos o reacciones automáticas: «¿cómo he podido actuar o sentir así?».` },
+      { name: `Desasosiego sobre sí mismo`, tier: `L3`, label: `Nivel III · Espontáneo`, status: `watch`, desc: `Ansiedad moral y autocrítica ante las propias limitaciones o incoherencias frente al ideal emergente.` },
+      { name: `Sentimiento de inferioridad hacia sí mismo`, tier: `L3`, label: `Nivel III · Espontáneo`, status: `watch`, desc: `No es complejo de inferioridad frente a otros (Adler), sino dolor por la distancia entre el yo actual y el propio potencial superior.` },
+      { name: `Descontento consigo mismo`, tier: `L3`, label: `Nivel III · Espontáneo`, status: `watch`, desc: `Motor crítico que impulsa a rechazar hábitos, actitudes egocéntricas o conformismos percibidos como inferiores.` },
+      { name: `Desadaptación positiva`, tier: `L3`, label: `Nivel III · Espontáneo`, status: `info`, desc: `Rechazo consciente de normas, prácticas o éticas del grupo social cuando se perciben como hipócritas, injustas o deshumanizantes.` },
+      { name: `Sujeto-objeto en uno mismo`, tier: `L45`, label: `Nivel IV · Organizado`, status: `ok`, desc: `Capacidad de observar los propios procesos emocionales y cognitivos con objetividad crítica («sujeto») y actuar sobre ellos («objeto»).` },
+      { name: `Tercer Factor`, tier: `L45`, label: `Nivel IV · Organizado`, status: `ok`, desc: `Dinamismo autónomo de afirmación y negación consciente que trasciende la biología (F1) y la presión social (F2) para elegir la propia trayectoria.` },
+      { name: `Transformación psíquica interna`, tier: `L45`, label: `Nivel IV · Organizado`, status: `ok`, desc: `Reestructuración profunda y duradera de los impulsos y respuestas emocionales hacia planos superiores sin retorno al nivel previo.` },
+      { name: `Autopsicoterapia y autoeducación`, tier: `L45`, label: `Nivel IV · Organizado`, status: `ok`, desc: `Diseño autónomo de medidas preventivas, reflexión autobiográfica y disciplina interior para sostener el propio crecimiento.` },
+      { name: `Ideal de personalidad y Autentismo`, tier: `L45`, label: `Niveles IV–V · Cúspide`, status: `ok`, desc: `Visión clara y unificadora del estándar ético y vital al que se aspira; en Nivel V, plena coherencia entre pensamiento, emoción y acción.` }
+    ];
+
+    var DIFF_DATA = {
+      tdah: {
+        sharedTitle: `Inquietud motora, habla rápida, impulsividad aparente y desconexión en clase`,
+        sharedDesc: `Tanto el TDAH como la combinación de OE Psicomotora, Intelectual e Imaginativa generan dificultad para permanecer quieto, interrupciones verbales y desatención a tareas repetitivas.`,
+        pathology: `Déficit ejecutivo transversal a todos los contextos (hogar, juego libre, tareas de interés); incapacidad persistente para sostener la atención incluso en temas elegidos; desorganización cognitiva primaria que mejora con estructura externa o farmacoterapia específica.`,
+        tdp: `Exceso de energía dirigido a metas o intereses apasionantes (flujo prolongado de horas en un tema complejo); la desatención ocurre solo ante rutinas repetitivas o carentes de reto intelectual; el habla rápida responde a velocidad asociativa de ideas (Flint, 2001).`,
+        key: `Evaluar la atención sostenida en contextos de alta motivación cognitiva y la capacidad de autorregulación motora cuando la tarea tiene sentido. Si el niño o adulto sostiene concentración profunda en proyectos complejos elegidos, la hipótesis exclusiva de TDAH pierde fuerza frente a OE psicomotora/intelectual.`
+      },
+      bipolar: {
+        sharedTitle: `Alternancia entre periodos de energía desbordante, euforia creativa y episodios de abatimiento o desesperanza`,
+        sharedDesc: `Las oscilaciones entre excitación intelectual-imaginativa nocturna y crisis de desánimo profundo de los niveles II–III pueden semejar episodios hipomaníacos y depresivos.`,
+        pathology: `Ciclado endógeno desvinculado de significados morales o eventos reales; grandiosidad delirante, fuga de ideas desorganizada, reducción patológica de la necesidad de sueño sin fatiga cognitiva estructurada y deterioro funcional grave del juicio de realidad.`,
+        tdp: `Picos de energía asociados a entusiasmo creativo, inmersión en proyectos o conexiones intuitivas coherentes; los descensos responden a crisis existenciales, duelo empático o disonancia ética entre «lo que es» y «lo que debería ser». El juicio lógico y la autocrítica permanecen preservados.`,
+        key: `Analizar la coherencia biográfica y temática de las oscilaciones afectivas: en la TDP están ancladas en valores, significado y conflictos morales (medio psíquico interno), mientras que en el trastorno bipolar responden a una disfunción cíclica autónoma del ánimo.`
+      },
+      ansiedad: {
+        sharedTitle: `Preocupación intensa, insomnio, rumiación nocturna, tristeza profunda y llanto frecuente`,
+        sharedDesc: `La OE Imaginativa y Emocional junto a la depresión existencial producen miedos anticipatorios elaborados, hipersensibilidad al sufrimiento mundial y apatía hacia metas convencionales.`,
+        pathology: `Miedos irracionales o fóbicos desconectados de la lógica comprensiva, anhedonia generalizada (incapacidad de disfrutar incluso de vínculos o intereses), deterioro neurovegetativo severo, enlentecimiento psicomotor global o ideas de inutilidad patológica sin eje valorativo.`,
+        tdp: `Preocupaciones articuladas sobre problemas reales o teóricos complejos (cambio climático, mortalidad, justicia, finitud — Guthrie, 2019); presencia simultánea de compasión activa, sentido del humor sutil y búsqueda ardiente de sentido y autenticidad (Mendaglio, 2008).`,
+        key: `Distinguir la anhedonia y parálisis clínica de la depresión mayor frente al dolor moral lúcido de la depresión existencial. Preguntar al paciente qué sentido atribuye a su malestar revela inmediatamente si existe un ideal de personalidad en construcción.`
+      },
+      tea: {
+        sharedTitle: `Aislamiento de pares, hipersensibilidad sensorial, intereses absorbentes y lenguaje pedante o literal`,
+        sharedDesc: `Un niño o adulto con OE Intelectual y Sensorial marcada evita entornos ruidosos, exige precisión terminológica («todo depende de lo que quiera decir con…») y no encaja en juegos sociales normativos.`,
+        pathology: `Déficit nuclear en la reciprocidad socioemocional, dificultad primaria para inferir estados mentales ajenos (teoría de la mente), estereotipias motoras rígidas y restricción inflexible de intereses sin apertura empática ni flexibilidad metafórica.`,
+        tdp: `El retraimiento social se debe a asincronía de intereses y rechazo a la superficialidad o agresividad del grupo (caso museo/parque en Guthrie, 2019), manteniendo elevada capacidad empática, rica comprensión de metáforas e intimidad afectiva profunda con pares intelectuales o adultos afines (Cash, 1999).`,
+        key: `Explorar la calidad de la empatía y la reciprocidad con interlocutores de nivel cognitivo-afectivo equivalente: en la TDP la desconexión es contextual (por asincronía), no un déficit estructural de sintonía emocional.`
+      }
+    };
+
+    var GLOSSARY_DATA = [
+      { term: `Potencial de Desarrollo (DP)`, orig: `Developmental Potential`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Dotación constitucional genética en interacción con el ambiente que determina el nivel máximo de evolución psíquica alcanzable. Integra talentos especiales, las cinco sobreexcitabilidades y el Tercer Factor.` },
+      { term: `Sobreexcitabilidad (OE)`, orig: `Polaco: Nadpobudliwość`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Capacidad del sistema nervioso central para responder con intensidad, agudeza y duración superiores al promedio ante estímulos internos o externos. Opera como canal de flujo de información.` },
+      { term: `Primer Factor`, orig: `First Factor`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Conjunto de determinantes genéticos, impulsos biológicos, instintos de autoconservación y temperamento innato que rigen la conducta en niveles inferiores.` },
+      { term: `Segundo Factor`, orig: `Second Factor`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Influencia del entorno social, educación, cultura y presión grupal. Produce conformidad convencional y adaptación acrítica cuando no es filtrado por la conciencia autónoma.` },
+      { term: `Tercer Factor`, orig: `Third Factor`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Dinamismo autónomo de autoevaluación, voluntad y autodeterminación consciente. Permite afirmar y cultivar lo que se considera superior y rechazar lo inferior, trascendiendo biología y entorno.` },
+      { term: `Multinivelidad`, orig: `Multilevelness`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Axioma central de la TDP: percepción diferenciada de múltiples planos jerárquicos de realidad interna y externa, diferenciando claramente «lo que es» de «lo que debería ser».` },
+      { term: `Uninivelidad`, orig: `Unilevelness`, cat: `axiomas`, catLabel: `Axiomas y Factores`, def: `Funcionamiento psíquico en un único plano de valor donde todos los impulsos y normas sociales tienen igual jerarquía, impidiendo la resolución vertical de los conflictos.` },
+      { term: `Medio Psíquico Interno`, orig: `Inner Psychic Milieu`, cat: `dinamismos`, catLabel: `Dinamismos`, def: `Espacio interior consciente donde interactúan los dinamismos evolutivos, la autoobservación y los valores jerarquizados; su ausencia define el Nivel I y su consolidación el Nivel IV.` },
+      { term: `Dinamismo`, orig: `Dynamism`, cat: `dinamismos`, catLabel: `Dinamismos`, def: `Fuerza biológica o mental —combinación de instintos, impulsos y procesos intelectuales fusionados con emociones— que controla la conducta y ejecuta la desintegración o integración.` },
+      { term: `Sobreexcitabilidad Psicomotora`, orig: `Psychomotor OE`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Exceso de energía orgánica y reactividad neuromuscular manifestada en movimiento continuo, habla rápida, presión para la acción e intensidad física.` },
+      { term: `Sobreexcitabilidad Sensorial`, orig: `Sensual OE`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Vivacidad e intensidad acrecentada de los sentidos (placer estético profundo o rechazo agudo a estímulos táctiles, sonoros u olfativos intrusivos).` },
+      { term: `Sobreexcitabilidad Intelectual`, orig: `Intellectual OE`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Avidez persistente de conocimiento, cuestionamiento lógico, búsqueda de la verdad, análisis teórico y síntesis conceptual independiente.` },
+      { term: `Sobreexcitabilidad Imaginativa`, orig: `Imaginational OE`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Riqueza de imágenes, metáforas, fantasía creativa, sueños vívidos, inventiva y facilidad para concebir escenarios alternativos y realidades teóricas.` },
+      { term: `Sobreexcitabilidad Emocional`, orig: `Emotional OE`, cat: `oe`, catLabel: `Sobreexcitabilidades`, def: `Profundidad e intensidad afectiva expresada en vínculos profundos, empatía compasiva, responsabilidad ética y resonancia ante el enigma existencial.` },
+      { term: `Integración Primaria (Nivel I)`, orig: `Primary Integration`, cat: `niveles`, catLabel: `Niveles y Estados`, def: `Estructura psíquica cohesionada y automática carente de conflictos internos o reflexión autocrítica, guiada por el interés propio y el conformismo.` },
+      { term: `Desintegración Uninivel (Nivel II)`, orig: `Unilevel Disintegration`, cat: `niveles`, catLabel: `Niveles y Estados`, def: `Ruptura horizontal de la integración inicial con intensa ambivalencia, ansiedad y confusión sin jerarquía de valores; conlleva riesgo clínico de cronicidad o suicidio.` },
+      { term: `Desintegración Multinivel Espontánea (Nivel III)`, orig: `Spontaneous Multilevel`, cat: `niveles`, catLabel: `Niveles y Estados`, def: `Inicio involuntario de conflictos verticales entre el yo real y el yo ideal, acompañado de culpa moral, asombro y descontento consigo mismo.` },
+      { term: `Desintegración Multinivel Organizada (Nivel IV)`, orig: `Organized Multilevel`, cat: `niveles`, catLabel: `Niveles y Estados`, def: `Dirección consciente y volitiva del propio desarrollo mediante el Tercer Factor, la autoeducación, la autopsicoterapia y la transformación psíquica interna.` },
+      { term: `Integración Secundaria (Nivel V)`, orig: `Secondary Integration`, cat: `niveles`, catLabel: `Niveles y Estados`, def: `Vértice de madurez humana donde la personalidad alcanza paz interior y coherencia plena entre ideal y acción, guiada por compasión y servicio universal.` },
+      { term: `Desadaptación Positiva`, orig: `Positive Maladjustment`, cat: `clinica`, catLabel: `Clínica y Evaluación`, def: `Inconformidad ética y rechazo consciente de actitudes sociales hipócritas o mediocres en favor de una jerarquía de valores superior.` },
+      { term: `Adaptación Negativa`, orig: `Negative Adjustment`, cat: `clinica`, catLabel: `Clínica y Evaluación`, def: `Sumisión automática y acrítica a las convenciones del entorno social, sacrificando la autenticidad individual y el desarrollo moral.` },
+      { term: `Autopsicoterapia`, orig: `Autopsychotherapy`, cat: `clinica`, catLabel: `Clínica y Evaluación`, def: `Proceso preventivo y curativo auto-diseñado por el paciente a través de la autocomprensión evolutiva y la escritura autobiográfica; meta última de la terapia dąbrowskiana.` },
+      { term: `Depresión Existencial`, orig: `Existential Depression`, cat: `clinica`, catLabel: `Clínica y Evaluación`, def: `Abatimiento lúcido surgido cuando el individuo con alta sensibilidad confronta la finitud, la soledad y la distancia entre el mundo real y su ideal ético.` },
+      { term: `Desarrollo Asincrónico`, orig: `Asynchronous Development`, cat: `clinica`, catLabel: `Clínica y Evaluación`, def: `Desfase evolutivo característico de las AACC entre capacidades cognitivas/éticas precoces y la edad cronológica, regulación física o entorno de pares.` }
+    ];
+
+    var CASES_DATA = [
+      {
+        title: `Caso 1 · «Lael» (Adolescente de grado 11 ante crisis familiar crítica)`,
+        source: `Literatura clínica: Piechowski & Jackson`,
+        presentation: `Adolescente altamente sensible y creativa cuyo padre sufre una enfermedad crítica súbita que lo deja incapacitado para comunicarse, mientras su madre queda emocionalmente paralizada. Lael se siente impotente frente al sistema médico y carente de recursos. Produce dibujos de fuerte carga simbólica sobre persecución e insostenibilidad vital y registra una conexión intensa con un sueño de dos años atrás al que otorga un sentido revelador profundo sobre su identidad («yo, como Yo Soy»).`,
+        risk: `Un clínico reduccionista podría diagnosticar sintomatología psicótica incipiente (por las imágenes de persecución y la significación autorreferencial del sueño) o trastorno depresivo mayor grave, medicalizando la crisis sin explorar su significado.`,
+        tdp: `Desintegración Multinivel Espontánea (Nivel III) desencadenada por una crisis vital extrema en una persona con elevada OE Imaginativa, Emocional e Intelectual. Sus dibujos y elaboración onírica no son pérdida de juicio de realidad, sino dinamismos creativos que reorganizan el medio psíquico interno para dar sentido al sufrimiento. De hecho, de forma autónoma busca en librerías y encuentra Positive Disintegration (1964) como mapa explicativo.`,
+        conduct: `Validar la legitimidad del dolor ante la indefensión familiar, acompañar la simbolización artística y onírica como vía de integración (en lugar de patologizarla), y ofrecer psicoeducación en TDP para transformar la sensación de colapso en agencia personal.`
+      },
+      {
+        title: `Caso 2 · «Nicholas» (3,5 años) y «Jack» (7 años) (Precocidad e intensidad infantil)`,
+        source: `Literatura clínica: Guthrie (2019) y Moyle (2008)`,
+        presentation: `Nicholas (3,5 años) permanece despierto por la noche aterrado ante la posibilidad de que la Tierra gire demasiado cerca de un agujero negro; al salir de preescolar para tomar un helado en un día soleado rompe en llanto anticipando que el sol lo derretirá demasiado rápido, obligándolo a lamer deprisa y provocándole cefalea por frío («brain freeze»), y solicita cambiarlo por un donut. En un museo, se paraliza y exige marcharse de la sala infantil por el ruido desordenado de otros niños. Por su parte, Jack (7 años) explica al evaluador mirando sus manos: «No siempre trabajan juntas; la derecha es curiosa y no se contiene, la izquierda la mira y dice que no debería hacerlo… gritar no ayuda, mis manos necesitan calmarse».`,
+        risk: `Etiquetado erróneo como Trastorno de Ansiedad Generalizada (en Nicholas, por preocupación excesiva e intolerancia sensorial), TEA leve (por rechazo a salas ruidosas y análisis literal) o TDAH impulsivo (en Jack, por conducta motora disruptiva en aula).`,
+        tdp: `En Nicholas coexisten OE Intelectual (razonamiento causal complejo y anticipatorio a los 3,5 años), OE Imaginativa (representación vívida de riesgos) y OE Sensorial (aversión al caos acústico). En Jack se observa ya el germen temprano de la escisión reflexiva sujeto-objeto en uno mismo (una mano actúa impulsivamente y la otra la observa y censura), demostrando conciencia moral y necesidad de regulación calmada.`,
+        conduct: `Reducir el «factor imprevisto» con anticipación cognitiva respetuosa (como implementaron los padres de Nicholas), proteger espacios de calma sensorial y sustituir las reprimendas punitivas escolares por estrategias de autorregulación motora y diálogo reflexivo.`
+      },
+      {
+        title: `Caso 3 · «El optimista quemado» y la bifurcación adolescente («Bubber / Shaun / Miranda»)`,
+        source: `Literatura clínica: Maxwell (1992), Piechowski (1997) y The Lemming Condition`,
+        presentation: `Joven con AACC que durante años mostró entusiasmo idealista («optimista»), pero que en la adolescencia sufre agotamiento físico y emocional severo, desilusión y resentimiento hacia la hipocresía adulta («¿por qué dejaron que el mundo fuera así?»). Se plantean tres trayectorias documentadas: (a) aislamiento mortal sin interlocutores válidos (como Shaun Casey, suicidio a los 17 años), (b) escisión defensiva hipertrofiando solo el intelecto competitivo y anestesiando la empatía (como Miranda), o (c) desadaptación positiva buscando pares afines para vivir según valores propios (como Bubber).`,
+        risk: `Minimizar la angustia existencial como «rebeldía adolescente» o, en el polo opuesto, prescribir únicamente antidepresivos para devolver al joven a una adaptación negativa competitiva sin atender su conflicto de valores.`,
+        tdp: `Transición crítica entre Nivel II (riesgo de estancamiento depresivo y suicidio si el individuo queda completamente aislado sin lenguaje para nombrar su vivencia) y Nivel III (descontento con el statu quo). El agotamiento («burnout») refleja la carga energética de sostener un ideal ético en un entorno hostil u orientado exclusivamente a estatus y competencia.`,
+        conduct: `Evaluación prioritaria del riesgo autolítico en Nivel II; creación de un vínculo terapéutico basado en el «conocimiento conectado» (escucha empática desde el marco del paciente); conexión con grupos de pares intelectuales-afectivos y fomento del Tercer Factor para evitar tanto la alienación como la sobreadaptación vacía.`
+      }
+    ];
+
+    var QUESTIONS_DATA = [
+      {
+        id: `q1`,
+        title: `Pregunta 1 · Diagnóstico diferencial en crisis agudas con AACC`,
+        prompt: `Un estudiante de 16 años con Altas Capacidades acude a consulta por insomnio de conciliación, llanto frecuente, cuestionamiento frontal de las normas del instituto y abatimiento intenso tras estudiar conflictos bélicos y desigualdad global. ¿Cuál es el criterio clínico decisivo para diferenciar una desintegración positiva multinivel (Nivel III) de un trastorno psiquiátrico primario (depresión mayor o trastorno bipolar)?`,
+        options: [
+          {
+            label: `A) La puntuación total en la escala de inteligencia (CI) y la presencia de sobreexcitabilidad emocional elevada en el OEQ-II.`,
+            correct: false,
+            feedback: `Incompleto desde el punto de vista clínico: tanto la alta capacidad intelectual como las sobreexcitabilidades elevadas pueden coexistir con trastornos psiquiátricos reales. Como advierte Mika (2007), la OE por sí sola puede precipitar desintegraciones negativas si no se acompaña de dinamismos multinivel.`
+          },
+          {
+            label: `B) La presencia de un medio psíquico interno con jerarquía de valores («lo que es» frente a «lo que debería ser»), conservación del juicio de realidad y coherencia temática moral del sufrimiento.`,
+            correct: true,
+            feedback: `Criterio clínico correcto. En la desintegración positiva multinivel (Nivel III), el malestar está estructurado alrededor de valores éticos, responsabilidad y autocrítica constructiva hacia un ideal, sin pérdida de juicio lógico ni anhedonia biológica desvinculada de sentido.`
+          },
+          {
+            label: `C) Descartar cualquier intervención clínica asumiendo que todo sufrimiento en personas con AACC es siempre positivo y se resuelve por sí solo.`,
+            correct: false,
+            feedback: `Postura imprudente y riesgosa: aunque la crisis tenga raíz evolutiva, si el paciente queda estancado en el Nivel II (desintegración uninivel) sin red de apoyo ni comprensión teórica, existe riesgo documentado de depresión crónica o conducta autolítica.`
+          }
+        ],
+        deepAnalysis: `Desde la metodología de Ciencias de la Salud, el diagnóstico diferencial exige una evaluación longitudinal multinivel: (1) verificar si existen dinamismos verticales (asombro consigo mismo, culpa moral lúcida, desadaptación positiva) frente a síntomas endógenos descontextualizados (ciclado anímico autónomo, grandiosidad psicótica o anhedonia total); (2) explorar la preservación de vínculos empáticos significativos y curiosidad intelectual en áreas de interés; y (3) descartar banderas rojas de Nivel II estancado (desesperanza absoluta sin ideal orientador, abuso de sustancias o ideación suicida) que requieren contención clínica inmediata.`
+      },
+      {
+        id: `q2`,
+        title: `Pregunta 2 · Límites psicométricos de las Sobreexcitabilidades (OEQ-II)`,
+        prompt: `En una evaluación psicométrica, un paciente adulto obtiene puntuaciones muy altas en las cinco dimensiones del OEQ-II (PS, SE, INT, IM, EM). ¿Por qué este resultado es insuficiente para predecir un desarrollo hacia los Niveles IV–V y cuándo señala, por el contrario, vulnerabilidad hacia la desintegración negativa?`,
+        options: [
+          {
+            label: `A) Porque el OEQ-II solo mide intensidad de respuesta estimular (materia prima neurológica), pero no mide el Tercer Factor ni la capacidad de transformación psíquica interna.`,
+            correct: true,
+            feedback: `Exacto. Como enfatizan Tillier (2009) y Mika (2009), las sobreexcitabilidades son solo una parte del Potencial de Desarrollo. Sin el Tercer Factor (voluntad autónoma) y un medio psíquico interno, la hiperreactividad genera sobrecarga y caos uninivel.`
+          },
+          {
+            label: `B) Porque el OEQ-II carece por completo de validez transcultural y solo funciona en población infantil estadounidense.`,
+            correct: false,
+            feedback: `Incorrecto empíricamente: el OEQ-II cuenta con replicaciones transculturales documentadas en cinco países (Falk et al., 2008), incluyendo estudios específicos con muestras amplias de EE. UU., Corea, Turquía y Hong Kong.`
+          },
+          {
+            label: `C) Porque tener las cinco sobreexcitabilidades altas anula el conflicto interno y coloca automáticamente al sujeto en Integración Secundaria (Nivel V).`,
+            correct: false,
+            feedback: `Opuesto a la teoría: Mendaglio (2007) señala explícitamente que quienes poseen niveles altos en las cinco formas de OE experimentan un intenso conflicto interno, lo cual es el punto de partida de la desintegración, nunca una garantía de Nivel V.`
+          }
+        ],
+        deepAnalysis: `La sobreexcitabilidad actúa como un amplificador de estímulos («combustible de alto octanaje»). Cuando concurre principalmente OE psicomotora y sensorial sin un fuerte contrapeso de inhibición reflexiva, OE emocional-intelectual y Tercer Factor, el individuo sufre sobreestimulación crónica sin brújula jerárquica. En ausencia de canalización educativa, artística o filosófica (Mróz, 2008) y de redes de contención, esa misma hipersensibilidad predice vulnerabilidad a neurosis incapacitantes, adicciones (búsqueda de alivio Tipo «T» de Farley) o colapso uninivel en el Nivel II.`
+      },
+      {
+        id: `q3`,
+        title: `Pregunta 3 · Objetivo terapéutico y ética de la intervención clínica`,
+        prompt: `Ante un adolescente o adulto con AACC que atraviesa una crisis de desintegración multinivel con elevada angustia existencial, ¿cuál debe ser el eje rector de la intervención psicoterapéutica desde el marco de Dąbrowski?`,
+        options: [
+          {
+            label: `A) Priorizar la supresión inmediata de cualquier ansiedad o tristeza mediante técnicas de ajuste conductual para que el paciente vuelva a integrarse acríticamente en su grupo escolar o laboral.`,
+            correct: false,
+            feedback: `Contraindicado como objetivo único: forzar el regreso a una «adaptación negativa» (como en el caso de Miranda) mutila el potencial de crecimiento y perpetúa la alienación interna.`
+          },
+          {
+            label: `B) Utilizar la psicoeducación en la TDP para reencuadrar los síntomas como procesos de crecimiento y fomentar la autopsicoterapia (diario autobiográfico, clarificación de valores y Tercer Factor), valorando soporte médico solo si el desbordamiento bloquea la funcionalidad vital.`,
+            correct: true,
+            feedback: `Correcto. Dąbrowski sostenía que la meta de la terapia es «eliminar al terapeuta» dotando al paciente de un marco teórico comprensible que transforme la angustia ciega en autoconducción consciente.`
+          },
+          {
+            label: `C) Prohibir cualquier tratamiento médico o farmacológico en todos los casos, dado que la desintegración positiva excluye la necesidad de soporte clínico.`,
+            correct: false,
+            feedback: `Equívoco peligroso: reencuadrar el sentido evolutivo de la crisis no excluye el alivio clínico prudente cuando existe agotamiento extremo, insomnio refractario o riesgo autolítico agudo en Nivel II.`
+          }
+        ],
+        deepAnalysis: `Para Dąbrowski, la psicoterapia no busca normalizar al sujeto a la media estadística sino habilitar su autonomía ética. La intervención estructurada comprende: (1) diagnóstico multinivel comprensivo antes de emitir etiquetas nosológicas definitivas; (2) psicoeducación explícita en TDP y sobreexcitabilidades para reducir la sensación de «estar roto o loco»; (3) herramientas de autopsicoterapia —como la escritura autobiográfica y el «Escudo de Armas Personal»— para diferenciar valores propios del barniz social; y (4) vigilancia clínica estrecha para prevenir que una crisis desborde hacia el estancamiento uninivel.`
+      }
+    ];
+
+    /* =========================================================================
+       FUNCIONES DE INTERACCIÓN (Declaraciones hoisted para compatibilidad total)
+       ========================================================================= */
+
+    function applyDpPreset(preset, btn) {
+      var f1 = document.getElementById('slider-f1');
+      var f2 = document.getElementById('slider-f2');
+      var f3 = document.getElementById('slider-f3');
+      var oe = document.getElementById('slider-oe-core');
+      if (!f1 || !f2 || !f3 || !oe) return;
+
+      var presetButtons = ['preset-dp-1', 'preset-dp-2', 'preset-dp-3', 'preset-dp-4'];
+      for (var i = 0; i < presetButtons.length; i++) {
+        var pb = document.getElementById(presetButtons[i]);
+        if (pb) pb.classList.remove('is-active');
+      }
+      if (btn) btn.classList.add('is-active');
+
+      if (preset === 'primary') {
+        f1.value = 80; f2.value = 85; f3.value = 10; oe.value = 20;
+      } else if (preset === 'unilevel') {
+        f1.value = 65; f2.value = 70; f3.value = 20; oe.value = 60;
+      } else if (preset === 'multilevel') {
+        f1.value = 35; f2.value = 30; f3.value = 85; oe.value = 85;
+      } else if (preset === 'blocked') {
+        f1.value = 40; f2.value = 88; f3.value = 32; oe.value = 80;
+      }
+      updateDpSimulator();
+    }
+
+    function updateDpSimulator() {
+      var f1El = document.getElementById('slider-f1');
+      var f2El = document.getElementById('slider-f2');
+      var f3El = document.getElementById('slider-f3');
+      var oeEl = document.getElementById('slider-oe-core');
+      if (!f1El || !f2El || !f3El || !oeEl) return;
+
+      var f1 = parseInt(f1El.value, 10);
+      var f2 = parseInt(f2El.value, 10);
+      var f3 = parseInt(f3El.value, 10);
+      var oe = parseInt(oeEl.value, 10);
+
+      var vf1 = document.getElementById('val-f1');
+      var vf2 = document.getElementById('val-f2');
+      var vf3 = document.getElementById('val-f3');
+      var voe = document.getElementById('val-oe-core');
+      if (vf1) vf1.textContent = f1 + `%`;
+      if (vf2) vf2.textContent = f2 + `%`;
+      if (vf3) vf3.textContent = f3 + `%`;
+      if (voe) voe.textContent = oe + `%`;
+
+      /* Cálculo orientativo del vector evolutivo (conceptual, no diagnóstico numérico) */
+      var verticalIndex = Math.round((f3 * 0.55 + oe * 0.45) - ((f1 + f2) * 0.15) + 15);
+      if (verticalIndex < 8) verticalIndex = 8;
+      if (verticalIndex > 98) verticalIndex = 98;
+
+      var panel = document.getElementById('dp-simulator-panel');
+      var titleEl = document.getElementById('dp-result-title');
+      var chipEl = document.getElementById('dp-result-chip');
+      var fillEl = document.getElementById('dp-meter-fill');
+      var descEl = document.getElementById('dp-result-desc');
+      if (!panel || !titleEl || !chipEl || !fillEl || !descEl) return;
+
+      fillEl.style.width = verticalIndex + `%`;
+
+      if (f3 < 28 && oe < 45) {
+        panel.setAttribute('data-status', 'info');
+        chipEl.setAttribute('data-status', 'neutral');
+        fillEl.style.backgroundColor = 'var(--primary)';
+        titleEl.textContent = `Nivel I · Integración Primaria predominante`;
+        chipEl.textContent = `Conformismo / sin conflicto vertical`;
+        descEl.textContent = `Predominio del Primer y Segundo Factor sobre una reactividad moderada o baja. Conducta guiada por impulsos o convenciones externas sin autocrítica transformadora.`;
+      } else if (oe >= 50 && f3 < 42) {
+        panel.setAttribute('data-status', 'alert');
+        chipEl.setAttribute('data-status', 'alert');
+        fillEl.style.backgroundColor = 'var(--error)';
+        if (f2 >= 75) {
+          titleEl.textContent = `Potencial bloqueado / Sobreadaptación tensa`;
+          chipEl.textContent = `Fricción Nivel II–III`;
+          descEl.textContent = `Alta sobreexcitabilidad reprimida bajo fuerte presión social (Segundo Factor) con Tercer Factor aún incipiente. Riesgo de agotamiento («optimista quemado»), somatización o ansiedad contenida.`;
+        } else {
+          titleEl.textContent = `Nivel II · Desintegración Uninivel vulnerable`;
+          chipEl.textContent = `Riesgo de desintegración negativa`;
+          descEl.textContent = `Elevada intensidad estimular sin eje autónomo suficiente que organice la crisis. Predominan ambivalencia, labilidad y riesgo de estancamiento clínico; requiere acompañamiento protector.`;
+        }
+      } else if (f3 >= 42 && f3 < 72) {
+        panel.setAttribute('data-status', 'watch');
+        chipEl.setAttribute('data-status', 'watch');
+        fillEl.style.backgroundColor = 'var(--data-3)';
+        titleEl.textContent = `Nivel III · Desintegración Multinivel Espontánea`;
+        chipEl.textContent = `Transición vertical activa`;
+        descEl.textContent = `El Tercer Factor y las sobreexcitabilidades nucleares fracturan la conformidad previa. Dolor moral lúcido («lo que es» vs. «lo que debería ser») y emergencia del medio psíquico interno.`;
+      } else {
+        panel.setAttribute('data-status', 'ok');
+        chipEl.setAttribute('data-status', 'ok');
+        fillEl.style.backgroundColor = 'var(--tertiary)';
+        titleEl.textContent = `Niveles IV–V · Autodirección Organizada e Integración`;
+        chipEl.textContent = `Autopsicoterapia y autonomía`;
+        descEl.textContent = `El Tercer Factor comanda la energía de las sobreexcitabilidades. La crisis se canaliza mediante autoobservación sujeto-objeto, coherencia ética y transformación psíquica estable.`;
+      }
+    }
+
+    function selectOe(key, btn) {
+      var data = OE_DATA[key];
+      if (!data) return;
+
+      if (btn && btn.parentElement) {
+        var siblings = btn.parentElement.querySelectorAll('.seg-btn');
+        for (var i = 0; i < siblings.length; i++) {
+          siblings[i].classList.remove('is-active');
+        }
+        btn.classList.add('is-active');
+      }
+
+      var card = document.getElementById('oe-detail-card');
+      var titleEl = document.getElementById('oe-title');
+      var chipEl = document.getElementById('oe-weight-chip');
+      var descEl = document.getElementById('oe-desc');
+      var manEl = document.getElementById('oe-manifest');
+      var clinEl = document.getElementById('oe-clinical');
+
+      if (card) card.setAttribute('data-status', data.status);
+      if (titleEl) titleEl.textContent = data.title;
+      if (chipEl) {
+        chipEl.textContent = data.chip;
+        chipEl.setAttribute('data-status', data.status);
+      }
+      if (descEl) descEl.textContent = data.desc;
+      if (manEl) manEl.textContent = data.manifest;
+      if (clinEl) clinEl.textContent = data.clinical;
+    }
+
+    function selectLevel(lvl, btn) {
+      var data = LEVELS_DATA[lvl];
+      if (!data) return;
+
+      if (btn && btn.parentElement) {
+        var buttons = btn.parentElement.querySelectorAll('.level-step-btn');
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].setAttribute('aria-selected', 'false');
+        }
+        btn.setAttribute('aria-selected', 'true');
+      }
+
+      var card = document.getElementById('level-detail-card');
+      var titleEl = document.getElementById('lvl-title');
+      var badgeEl = document.getElementById('lvl-badge');
+      var sumEl = document.getElementById('lvl-summary');
+      var dynEl = document.getElementById('lvl-dynamisms');
+      var clinEl = document.getElementById('lvl-clinical');
+      var exEl = document.getElementById('lvl-examples');
+
+      if (card) card.setAttribute('data-status', data.status);
+      if (titleEl) titleEl.textContent = data.title;
+      if (badgeEl) {
+        badgeEl.textContent = data.badge;
+        badgeEl.setAttribute('data-status', data.status === 'info' ? 'neutral' : data.status);
+      }
+      if (sumEl) sumEl.textContent = data.summary;
+      if (dynEl) dynEl.textContent = data.dynamisms;
+      if (clinEl) clinEl.textContent = data.clinical;
+      if (exEl) exEl.textContent = data.examples;
+    }
+
+    function filterDynamisms(tier, btn) {
+      if (btn && btn.parentElement) {
+        var siblings = btn.parentElement.querySelectorAll('.seg-btn');
+        for (var i = 0; i < siblings.length; i++) {
+          siblings[i].classList.remove('is-active');
+        }
+        btn.classList.add('is-active');
+      }
+
+      var grid = document.getElementById('dynamisms-grid');
+      if (!grid) return;
+
+      var items = [];
+      for (var j = 0; j < DYNAMISMS_DATA.length; j++) {
+        if (tier === 'all' || DYNAMISMS_DATA[j].tier === tier) {
+          items.push(DYNAMISMS_DATA[j]);
+        }
+      }
+
+      var html = '';
+      for (var k = 0; k < items.length; k++) {
+        var d = items[k];
+        html += `<article class="status-card" data-status="` + d.status + `">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); margin-bottom: var(--space-xs); flex-wrap: wrap;">
+            <h4 class="card-title" style="margin: 0;">` + d.name + `</h4>
+            <span class="chip" data-status="` + d.status + `">` + d.label + `</span>
+          </div>
+          <p style="margin: 0; font-size: 0.94rem; color: var(--on-surface);">` + d.desc + `</p>
+        </article>`;
+      }
+      grid.innerHTML = html;
+    }
+
+    function selectDiff(key, btn) {
+      var data = DIFF_DATA[key];
+      if (!data) return;
+
+      if (btn && btn.parentElement) {
+        var siblings = btn.parentElement.querySelectorAll('.seg-btn');
+        for (var i = 0; i < siblings.length; i++) {
+          siblings[i].classList.remove('is-active');
+        }
+        btn.classList.add('is-active');
+      }
+
+      var st = document.getElementById('diff-shared-title');
+      var sd = document.getElementById('diff-shared-desc');
+      var pa = document.getElementById('diff-pathology');
+      var td = document.getElementById('diff-tdp');
+      var ky = document.getElementById('diff-key');
+
+      if (st) st.textContent = data.sharedTitle;
+      if (sd) sd.textContent = data.sharedDesc;
+      if (pa) pa.textContent = data.pathology;
+      if (td) td.textContent = data.tdp;
+      if (ky) ky.textContent = data.key;
+    }
+
+    function renderGlossary() {
+      var searchEl = document.getElementById('glossary-search');
+      var catEl = document.getElementById('glossary-category');
+      var gridEl = document.getElementById('glossary-grid');
+      var countEl = document.getElementById('glossary-count');
+      if (!gridEl || !countEl) return;
+
+      var query = searchEl ? searchEl.value.trim().toLowerCase() : '';
+      var cat = catEl ? catEl.value : 'all';
+
+      var filtered = [];
+      for (var i = 0; i < GLOSSARY_DATA.length; i++) {
+        var item = GLOSSARY_DATA[i];
+        var matchesCat = (cat === 'all' || item.cat === cat);
+        var haystack = (item.term + ' ' + item.orig + ' ' + item.def).toLowerCase();
+        var matchesQuery = (!query || haystack.indexOf(query) !== -1);
+        if (matchesCat && matchesQuery) {
+          filtered.push(item);
+        }
+      }
+
+      countEl.textContent = `Mostrando ` + filtered.length + ` de ` + GLOSSARY_DATA.length + ` términos clínicos`;
+
+      if (filtered.length === 0) {
+        gridEl.innerHTML = `<div class="status-card" data-status="watch">
+          <h4 class="card-title">Sin coincidencias terminológicas</h4>
+          <p style="margin: 0;">No se encontraron términos que coincidan con «` + query + `». Pruebe otra raíz conceptual o restablezca el filtro de dominio.</p>
+        </div>`;
+        return;
+      }
+
+      var html = '';
+      for (var j = 0; j < filtered.length; j++) {
+        var g = filtered[j];
+        html += `<article class="glossary-card">
+          <div class="glossary-meta">
+            <h4 class="card-title" style="margin: 0;">` + g.term + `</h4>
+            <span class="chip" data-status="info">` + g.catLabel + `</span>
+          </div>
+          <span class="glossary-orig">` + g.orig + `</span>
+          <p style="margin: var(--space-xs) 0 0 0; font-size: 0.94rem;">` + g.def + `</p>
+        </article>`;
+      }
+      gridEl.innerHTML = html;
+    }
+
+    function selectCase(idx, btn) {
+      var c = CASES_DATA[idx];
+      if (!c) return;
+
+      if (btn && btn.parentElement) {
+        var siblings = btn.parentElement.querySelectorAll('.seg-btn');
+        for (var i = 0; i < siblings.length; i++) {
+          siblings[i].classList.remove('is-active');
+        }
+        btn.classList.add('is-active');
+      }
+
+      var t = document.getElementById('case-title');
+      var s = document.getElementById('case-source');
+      var p = document.getElementById('case-presentation');
+      var r = document.getElementById('case-risk');
+      var td = document.getElementById('case-tdp');
+      var co = document.getElementById('case-conduct');
+
+      if (t) t.textContent = c.title;
+      if (s) s.textContent = c.source;
+      if (p) p.textContent = c.presentation;
+      if (r) r.textContent = c.risk;
+      if (td) td.textContent = c.tdp;
+      if (co) co.textContent = c.conduct;
+    }
+
+    function renderQuestions() {
+      var container = document.getElementById('questions-container');
+      if (!container) return;
+
+      var html = '';
+      for (var i = 0; i < QUESTIONS_DATA.length; i++) {
+        var q = QUESTIONS_DATA[i];
+        var optsHtml = '';
+        for (var j = 0; j < q.options.length; j++) {
+          optsHtml += `<button type="button" class="q-option-btn" aria-pressed="false" onclick="answerQuestion('` + q.id + `', ` + j + `, this)">` + q.options[j].label + `</button>`;
+        }
+
+        html += `<article class="question-card" id="card-` + q.id + `">
+          <div>
+            <h4 class="card-title" style="font-size: 1.15rem;">` + q.title + `</h4>
+            <p style="margin: var(--space-xs) 0 0 0;">` + q.prompt + `</p>
+          </div>
+          <div class="q-options">` + optsHtml + `</div>
+          <div class="q-analysis-panel" id="analysis-` + q.id + `">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap; margin-bottom: var(--space-xs);">
+              <strong id="verdict-` + q.id + `" style="font-family: var(--font-headline);"></strong>
+              <span class="chip" id="verdict-chip-` + q.id + `" data-status="info">Análisis clínico</span>
+            </div>
+            <p id="feedback-` + q.id + `" style="margin: 0 0 var(--space-sm) 0;"></p>
+            <div style="border-top: 1px solid var(--outline-variant); padding-top: var(--space-sm);">
+              <span class="kpi-label">Profundización en Ciencias de la Salud</span>
+              <p style="margin: var(--space-xs) 0 0 0; font-size: 0.94rem;">` + q.deepAnalysis + `</p>
+            </div>
+          </div>
+        </article>`;
+      }
+      container.innerHTML = html;
+    }
+
+    function answerQuestion(qId, optIdx, btn) {
+      var qObj = null;
+      for (var i = 0; i < QUESTIONS_DATA.length; i++) {
+        if (QUESTIONS_DATA[i].id === qId) {
+          qObj = QUESTIONS_DATA[i];
+          break;
+        }
+      }
+      if (!qObj || !qObj.options[optIdx]) return;
+
+      if (btn && btn.parentElement) {
+        var btns = btn.parentElement.querySelectorAll('.q-option-btn');
+        for (var j = 0; j < btns.length; j++) {
+          btns[j].setAttribute('aria-pressed', 'false');
+        }
+        btn.setAttribute('aria-pressed', 'true');
+      }
+
+      var opt = qObj.options[optIdx];
+      var panel = document.getElementById('analysis-' + qId);
+      var verdictEl = document.getElementById('verdict-' + qId);
+      var chipEl = document.getElementById('verdict-chip-' + qId);
+      var feedbackEl = document.getElementById('feedback-' + qId);
+
+      if (panel) {
+        panel.classList.add('is-visible');
+        panel.style.borderLeftColor = opt.correct ? 'var(--tertiary)' : 'var(--error)';
+      }
+      if (verdictEl) {
+        verdictEl.textContent = opt.correct ? `Razonamiento clínico concordante` : `Requiere ajuste diagnóstico`;
+      }
+      if (chipEl) {
+        chipEl.textContent = opt.correct ? `Criterio validado` : `Sesgo frecuente`;
+        chipEl.setAttribute('data-status', opt.correct ? 'ok' : 'alert');
+      }
+      if (feedbackEl) {
+        feedbackEl.textContent = opt.feedback;
+      }
+    }
+
+    function initOeClustersChart() {
+      var canvas = document.getElementById('oe-clusters-chart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      var styles = getComputedStyle(document.documentElement);
+      var c1 = styles.getPropertyValue('--data-1').trim() || '#0f7c8a';
+      var c2 = styles.getPropertyValue('--data-2').trim() || '#2e7d4f';
+      var c3 = styles.getPropertyValue('--data-3').trim() || '#b86e00';
+      var c4 = styles.getPropertyValue('--data-4').trim() || '#5c5fb0';
+      var textColor = styles.getPropertyValue('--on-surface-variant').trim() || '#46585f';
+      var gridColor = styles.getPropertyValue('--outline-variant').trim() || '#d5e3e5';
+
+      /* Banda verde tenue de referencia normativa (-0.25 a +0.25 SD) - Treatment #5 */
+      var referenceBandPlugin = {
+        id: 'referenceBand',
+        beforeDatasetsDraw: function(chart) {
+          var ctx = chart.ctx;
+          var yAxis = chart.scales.y;
+          var xAxis = chart.scales.x;
+          if (!yAxis || !xAxis) return;
+          var yTop = yAxis.getPixelForValue(0.25);
+          var yBottom = yAxis.getPixelForValue(-0.25);
+          ctx.save();
+          ctx.globalAlpha = 0.12;
+          ctx.fillStyle = c2;
+          ctx.fillRect(xAxis.left, yTop, xAxis.width, yBottom - yTop);
+          ctx.restore();
+        }
+      };
+
+      new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: ['Psicomotora', 'Sensorial', 'Imaginativa', 'Intelectual', 'Emocional'],
+          datasets: [
+            {
+              label: 'C1: Baja Imaginativa (n=109)',
+              data: [0.03, 0.65, -1.39, 0.55, 0.15],
+              backgroundColor: c1,
+              borderRadius: 3
+            },
+            {
+              label: 'C2: Alta Intelectual (n=93)',
+              data: [0.47, -0.60, -0.60, 1.19, -0.54],
+              backgroundColor: c2,
+              borderRadius: 3
+            },
+            {
+              label: 'C3: Alta Psicomotora / Baja IM (n=83)',
+              data: [1.06, -0.67, -0.91, 0.11, 0.39],
+              backgroundColor: c3,
+              borderRadius: 3
+            },
+            {
+              label: 'C4: Baja Psicomotora (n=94)',
+              data: [-1.26, 0.21, 0.20, 0.52, 0.33],
+              backgroundColor: c4,
+              borderRadius: 3
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: textColor,
+                font: { family: 'Figtree, sans-serif', size: 12, weight: '600' },
+                boxWidth: 12
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  var val = ctx.parsed.y;
+                  var sign = val > 0 ? '+' : '';
+                  return ctx.dataset.label + ': ' + sign + val.toFixed(2) + ' DE';
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: {
+                color: textColor,
+                font: { family: 'Figtree, sans-serif', size: 12, weight: '600' }
+              }
+            },
+            y: {
+              min: -1.6,
+              max: 1.4,
+              title: {
+                display: true,
+                text: 'Puntuación Z (DE)',
+                color: textColor,
+                font: { family: 'Figtree, sans-serif', size: 12, weight: '600' }
+              },
+              grid: { color: gridColor },
+              ticks: {
+                color: textColor,
+                font: { family: 'Figtree, sans-serif', size: 11 }
+              }
+            }
+          }
+        },
+        plugins: [referenceBandPlugin]
+      });
+    }
+
+    function initScrollReveals() {
+      var reveals = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        for (var i = 0; i < reveals.length; i++) {
+          reveals[i].classList.add('is-visible');
+        }
+        return;
+      }
+      var observer = new IntersectionObserver(function(entries) {
+        for (var i = 0; i < entries.length; i++) {
+          if (entries[i].isIntersecting) {
+            entries[i].target.classList.add('is-visible');
+            observer.unobserve(entries[i].target);
+          }
+        }
+      }, { threshold: 0.08 });
+
+      for (var j = 0; j < reveals.length; j++) {
+        observer.observe(reveals[j]);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      updateDpSimulator();
+      selectOe('PS', null);
+      selectLevel(1, null);
+      filterDynamisms('all', null);
+      selectDiff('tdah', null);
+      renderGlossary();
+      selectCase(0, null);
+      renderQuestions();
+      initOeClustersChart();
+      initScrollReveals();
+    });
+  </script>
+</body>
+</html>
